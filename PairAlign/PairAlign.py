@@ -1,5 +1,5 @@
 from flask import Blueprint,jsonify,request
-from PairAlign.NW import NW
+from PairAlign.Algorithms.NW import NW
 
 pair_align_bp = Blueprint('pair_align_bp', __name__)
 
