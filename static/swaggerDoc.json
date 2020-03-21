@@ -1,0 +1,108 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "description": "Interactive Bioinformatics Alignment Algorithms Analyser and Visualizer",
+      "version": "1.0.0",
+      "title": "BioViz",
+      "contact": {
+        "email": "bioviz@abc.com"
+      }
+    },
+    "servers": [
+      {
+        "url": "/"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Pair Align - NW",
+        "description": "Align a pair of sequence with NW algorithm"
+      }
+    ],
+    "paths": {
+      "/pair/nw": {
+        "post": {
+          "tags": [
+            "Pair Align - NW"
+          ],
+          "summary": "Returns alignment, score matrix and direction matrix",
+          "requestBody": {
+            "description": "Pair Align data",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PairAlignRequestPostBody"
+                }
+              }
+            }
+          },
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/components/schemas/PairAlignResult"
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "PairAlignRequestPostBody": {
+          "type": "object",
+          "properties": {
+            "seq_a": {
+              "type": "string"
+              
+            },
+            "seq_b": {
+              "type": "string"
+            },
+            "match":{
+              "type":"number"
+            },
+            "mismatch":{
+              "type":"number"
+            },
+            "gap":{
+              "type":"number"
+            }
+          }
+        },
+        "PairAlignResult":{
+          "type":"object",
+          "properties":{
+            "result":{
+              "type":"object",
+              "properties":{
+                "algn_a": {
+                  "type": "string"
+                  
+                },
+                "algn_b": {
+                  "type": "string"
+                },
+                "distance_matrix":{
+                  "type":"array",
+                  "items":{
+                    "type": "integer"
+                  }                    
+                },
+                "score_matrix":{
+                  "type":"array",
+                  "items":{
+                    "type": "integer"
+                  }  
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
