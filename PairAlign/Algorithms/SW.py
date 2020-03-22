@@ -79,8 +79,8 @@ def SW(s1, s2, match, mismatch, gap):
             sym += ' '
 
     identity = iden / len(align1) * 100
-    return [identity, max_score, align1, align2]
-
+    # return [identity, max_score, align1, align2]
+    return (H.tolist(),T.tolist(), align1, align2)
 
 if __name__ == '__main__':
     s1 = "TGTTACGG"

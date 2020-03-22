@@ -80,14 +80,32 @@
             "result":{
               "type":"object",
               "properties":{
-                "algn_a": {
-                  "type": "string"
+                "alignments": {
+                  "type": "array",
+                  "items":{
+                    "type":"object",
+                    "properties":{
+                      "algn_a":{
+                        "type":"string"
+                      },
+                      "algn_b":{
+                        "type":"string"
+                      },
+                      "path":{
+                        "type":"array",
+                        "items":{
+                          "type":"integer"
+                        }
+                      }
+                    }
+
+                  }
                   
                 },
-                "algn_b": {
-                  "type": "string"
+                "score": {
+                  "type": "integer"
                 },
-                "distance_matrix":{
+                "direction_matrix":{
                   "type":"array",
                   "items":{
                     "type": "integer"
