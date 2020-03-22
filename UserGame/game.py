@@ -6,7 +6,7 @@ from UserGame.Algorithm.GameScore import GS
 game_bp = Blueprint('game_bp', __name__)
 
 
-@pair_align_bp.route('/GS',methods=['POST'])
+@game_bp.route('/GS',methods=['POST'])
 def game_score():
     request_data = request.get_json()
     match = int(request_data['match'])
