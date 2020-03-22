@@ -2,6 +2,7 @@
 
 from __future__ import division, print_function
 import numpy as np
+from PairAlign.Algorithms.Algorithm import Algorithm
 
 
 # def mch(alpha, beta, match, mismatch, gap):
@@ -95,8 +96,10 @@ import numpy as np
 # =================================================================================================
 
 
-
 class SW(Algorithm):
+    LEFT = 1
+    DIAGONAL = 2
+    UP = 3
 
     def __init__(self, seq_a, seq_b, match_score=1, mismatch_penalty=-1, gap_penalty=-1):
         self.seq_a = seq_a
@@ -104,114 +107,91 @@ class SW(Algorithm):
 
         self.len_a = len(seq_a)
         self.len_b = len(seq_b)
-        
+
         self.match_score = match_score
         self.mismatch_penalty = mismatch_penalty
         self.gap_penalty = gap_penalty
-
-        # final alignments
         self.algn_a = ''
         self.algn_b = ''
-
-        # traceback matrix
+        self.score = 0
         self.max_score = 0
-        self.T=np.zeros((seq_a+1, seq_b+1))
-
-        # ponter matrix of H
-        self.H=np.zeros((seq_a+1, seq_b+1))
         self.max_i = 0
         self.max_j = 0
+        self.traceback_path = []
 
-        self.sym = ''
-        self.identity = 0
+        self.score_mat = np.zeros((self.len_a + 1, self.len_b + 1))
+        self.direction_mat = np.empty((self.len_a + 1, self.len_b + 1), dtype=object)
 
+    def initialize(self):
+        self.direction_mat[0][0] = [0]
 
+        for i in range(1, self.len_a + 1):
+            self.direction_mat[i][0] = [0]
 
-    def mch(alpha, beta):
-        if alpha == beta:
+        for j in range(1, self.len_b + 1):
+            self.direction_mat[0][j] = [0]
+
+    def __similarity(self, a_i, b_i):
+        if self.seq_a[a_i] == self.seq_b[b_i]:
             return self.match_score
-        elif alpha == '-' or beta == '-':
-            return self.gap_penalty
         else:
             return self.mismatch_penalty
 
-# SW initialize score and ponter matrix
-    def SW(self):
-        # Score, Pointer Matrix
+    def calculate_score(self):
         for i in range(1, self.len_a + 1):
             for j in range(1, self.len_b + 1):
-                sc_diag = H[i-1][j-1] + mch(self.seq_a[i-1], self.seq_b[j-1])
-                sc_up = H[i][j-1] + self.gap_penalty
-                sc_left = H[i-1][j] + self.gap_penalty
-                H[i][j] = max(0, sc_left, sc_up, sc_diag)
-                if H[i][j] == 0:
-                    self.T[i][j] = 0
-                if H[i][j] == sc_left:
-                    self.T[i][j] = 1
-                if H[i][j] == sc_up:
-                    self.T[i][j] = 2
-                if H[i][j] == sc_diag:
-                    self.T[i][j] = 3
-                if H[i][j] >= self.max_score:
-                    max_i = i
-                    max_j = j
-                    self.max_score = H[i][j]
+                match = self.score_mat[i - 1][j - 1] + self.__similarity(i - 1, j - 1)
+                delete = self.score_mat[i - 1][j] + self.gap_penalty
+                insert = self.score_mat[i][j - 1] + self.gap_penalty
 
+                max_value = max(0, match, delete, insert)
 
-        self.max_i, self.max_j = max_i, max_j
+                self.score_mat[i][j] = max_value
+                self.direction_mat[i][j] = []
+                if max_value == match:
+                    self.direction_mat[i][j].append(self.DIAGONAL)
+                if max_value == delete:
+                    self.direction_mat[i][j].append(self.UP)
+                if max_value == insert:
+                    self.direction_mat[i][j].append(self.LEFT)
+                if max_value == 0:
+                    self.direction_mat[i][j].append(0)
+                if max_value >= self.max_score:
+                    self.max_i = i
+                    self.max_j = j
+                    self.max_score = max_value
 
+        self.score = int(self.score_mat[self.len_a][self.len_b])
 
     def traceback(self):
-        i=self.max_i
-        j=self.max_j
-        
-        while self.T[i][j] != 0:
-            if self.T[i][j] == 3:
-                a1 = self.seq_a[i-1]
-                a2 = self.seq_b[j-1]
+        i = self.max_i
+        j = self.max_j
+
+        while (0 not in self.direction_mat[i][j]):
+            self.traceback_path.append([i, j])
+
+            if (self.DIAGONAL in self.direction_mat[i][j]):
+                self.algn_a = self.seq_a[i - 1] + self.algn_a
+                self.algn_b = self.seq_b[j - 1] + self.algn_b
                 i -= 1
                 j -= 1
-            elif self.T[i][j] == 2:
-                a1 = '-'
-                a2 = self.seq_b[j-1]
-                j -= 1
-            elif self.T[i][j] == 1:
-                a1 = self.seq_a[i-1]
-                a2 = '-'
+            elif (self.UP in self.direction_mat[i][j]):
+                self.algn_a = self.seq_a[i - 1] + self.algn_a
+                self.algn_b = '-' + self.algn_b
                 i -= 1
-            self.algn_a += a1
-            self.algn_b += a2
-
-        self.algn_a = self.algn_a[::-1]
-        self.algn_b = self.algn_b[::-1]
-        
-        
-    def sym(self):   
-        iden = 0 
-        for i in range(len(self.algn_a)):
-            a1 = self.algn_a[i]
-            a2 = self.algn_b[i]
-            if a1 == a2:
-                self.sym += a1
-                iden += 1
-            elif a1 != a2 and a1 != '-' and a2 != '-':
-                self.sym += ' '
-            elif a1 == '-' or a2 == '-':
-                self.sym += ' '
-
-        self.identity = iden / len(self.algn_a) * 100
-
-        # return [identity, max_score, align1, align2]
-        # return (H.tolist(),self.T.tolist(), self.algn_a, self.algn_b)
+            elif (self.LEFT in self.direction_mat[i][j]):
+                self.algn_a = '-' + self.algn_a
+                self.algn_b = self.seq_b[j - 1] + self.algn_b
+                j -= 1
 
     def get_alignments(self) -> list:
-        return [{'path': self.T, 'algn_a': self.algn_a, 'algn_b': self.algn_b}]
+        return [{'path': self.traceback_path, 'algn_a': self.algn_a, 'algn_b': self.algn_b}]
 
-    def get_max_score(self)-> int:
+    def get_score(self)-> int:
         return self.max_score
 
     def get_score_matrix(self) -> list:
-        return self.T.tolist()
+        return self.score_mat.tolist()
 
     def get_direction_matrix(self) -> list:
-        return self.H.tolist()
+        return self.direction_mat.tolist()
