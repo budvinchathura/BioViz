@@ -1,6 +1,5 @@
 import numpy as np
 
-
 def NW(seq_a, seq_b, match_score=1, mismatch_penalty=-1, gap_penalty=-1):
     LEFT = 1
     DIAGONAL = 2
