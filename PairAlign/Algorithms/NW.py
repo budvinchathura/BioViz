@@ -168,10 +168,10 @@ class NW(Algorithm):
             elif a1 == '-' or a2 == '-':
                 sym += ' '
 
-        self.identity = [iden / l]
+        self.identity = iden / l
 
     def get_alignments(self) -> list:
-        return [{'path': self.traceback_path, 'algn_a': self.algn_a, 'algn_b': self.algn_b}]
+        return [{'path': self.traceback_path, 'algn_a': self.algn_a, 'algn_b': self.algn_b, 'identity': self.identity}]
 
     def get_score(self)-> int:
         return self.score
@@ -182,5 +182,3 @@ class NW(Algorithm):
     def get_direction_matrix(self) -> list:
         return self.direction_mat.tolist()
     
-    def get_identity(self) -> list:
-        return self.identity

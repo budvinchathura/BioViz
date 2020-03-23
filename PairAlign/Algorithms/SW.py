@@ -173,8 +173,9 @@ class SW(Algorithm):
             j = self.max_j[k]
             self.algn_a.append('')
             self.algn_b.append('')
+            self.traceback_path.append([])
             while (0 not in self.direction_mat[i][j]):
-                self.traceback_path.append([i, j])
+                self.traceback_path[k].append([i, j])
 
                 if (self.DIAGONAL in self.direction_mat[i][j]):
                     self.algn_a[k] = self.seq_a[i - 1] + self.algn_a[k]
@@ -209,7 +210,10 @@ class SW(Algorithm):
             self.identity.append(iden / l)
 
     def get_alignments(self) -> list:
-        return [{'path': self.traceback_path, 'algn_a': self.algn_a, 'algn_b': self.algn_b}]
+        res = []
+        for k in range(len(self.max_i)):
+            res.append({'path': self.traceback_path[k], 'algn_a': self.algn_a[k], 'algn_b': self.algn_b[k], 'identity': self.identity[k]})
+        return res
 
     def get_score(self)-> int:
         return self.max_score
@@ -219,6 +223,3 @@ class SW(Algorithm):
 
     def get_direction_matrix(self) -> list:
         return self.direction_mat.tolist()
-
-    def get_identity(self) -> int:
-        return self.identity

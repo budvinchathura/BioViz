@@ -14,5 +14,4 @@ class Executer():
         score = self.algorithm.get_score()
         score_mat = self.algorithm.get_score_matrix()
         direction_mat = self.algorithm.get_direction_matrix()
-        identity = self.algorithm.get_identity()
-        return {'score': score, 'alignments': alignments,'score_matrix':score_mat,'direction_matrix':direction_mat, 'identity':identity}
+        return {'score': score, 'alignments': alignments,'score_matrix':score_mat,'direction_matrix':direction_mat}
