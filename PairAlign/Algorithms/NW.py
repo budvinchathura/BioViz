@@ -152,6 +152,23 @@ class NW(Algorithm):
                 self.algn_b = self.seq_b[j-1]+self.algn_b
                 j -= 1
 
+    def calculate_identity(self):
+        sym = ''
+        iden = 0
+        l = len(self.algn_a)
+        for i in range(l):
+            a1 = self.algn_a[i]
+            a2 = self.algn_b[i]
+            if a1 == a2:
+                sym += a1
+                iden += 1
+            elif a1 != a2 and a1 != '-' and a2 != '-':
+                sym += ' '
+            elif a1 == '-' or a2 == '-':
+                sym += ' '
+
+        self.identity = iden / l
+
     def get_alignments(self) -> list:
         return [{'path': self.traceback_path, 'algn_a': self.algn_a, 'algn_b': self.algn_b}]
 
@@ -163,3 +180,6 @@ class NW(Algorithm):
 
     def get_direction_matrix(self) -> list:
         return self.direction_mat.tolist()
+    
+    def get_identity(self) -> int:
+        return self.identity

@@ -30,3 +30,7 @@ class Algorithm(ABC):
     @abstractmethod
     def get_direction_matrix(self) -> int:
         pass
+
+    @abstractmethod
+    def get_identity(self) -> int:
+        pass

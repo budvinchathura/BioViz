@@ -20,7 +20,6 @@ def pair_nw():
     result = executer.get_results()
 
     resp = {'result': result}
-    print(resp)
     return jsonify(resp)
 
 
@@ -37,6 +36,5 @@ def pair_sw():
     result = executer.get_results()
 
     resp = {'result': result}
-    print(resp)
 
     return jsonify(resp)
