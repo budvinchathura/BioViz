@@ -32,5 +32,5 @@ class Algorithm(ABC):
         pass
 
     @abstractmethod
-    def get_identity(self) -> int:
+    def get_identity(self) -> list:
         pass

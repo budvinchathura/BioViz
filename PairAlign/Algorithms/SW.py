@@ -111,13 +111,13 @@ class SW(Algorithm):
         self.match_score = match_score
         self.mismatch_penalty = mismatch_penalty
         self.gap_penalty = gap_penalty
-        self.algn_a = ''
-        self.algn_b = ''
+        self.algn_a = []
+        self.algn_b = []
         self.score = 0
         self.max_score = 0
-        self.max_i = 0
-        self.max_j = 0
-        self.identity = 0
+        self.max_i = []
+        self.max_j = []
+        self.identity = []
         self.traceback_path = []
 
         self.score_mat = np.zeros((self.len_a + 1, self.len_b + 1))
@@ -157,50 +157,56 @@ class SW(Algorithm):
                     self.direction_mat[i][j].append(self.LEFT)
                 if max_value == 0:
                     self.direction_mat[i][j].append(0)
-                if max_value >= self.max_score:
-                    self.max_i = i
-                    self.max_j = j
+                if max_value > self.max_score:
+                    self.max_i = [i]
+                    self.max_j = [j]
                     self.max_score = max_value
+                elif max_value == self.max_score:
+                    self.max_i.append(i)
+                    self.max_j.append(j)
 
         self.score = int(self.score_mat[self.len_a][self.len_b])
 
     def traceback(self):
-        i = self.max_i
-        j = self.max_j
+        for k in range(len(self.max_i)):
+            i = self.max_i[k]
+            j = self.max_j[k]
+            self.algn_a.append('')
+            self.algn_b.append('')
+            while (0 not in self.direction_mat[i][j]):
+                self.traceback_path.append([i, j])
 
-        while (0 not in self.direction_mat[i][j]):
-            self.traceback_path.append([i, j])
-
-            if (self.DIAGONAL in self.direction_mat[i][j]):
-                self.algn_a = self.seq_a[i - 1] + self.algn_a
-                self.algn_b = self.seq_b[j - 1] + self.algn_b
-                i -= 1
-                j -= 1
-            elif (self.UP in self.direction_mat[i][j]):
-                self.algn_a = self.seq_a[i - 1] + self.algn_a
-                self.algn_b = '-' + self.algn_b
-                i -= 1
-            elif (self.LEFT in self.direction_mat[i][j]):
-                self.algn_a = '-' + self.algn_a
-                self.algn_b = self.seq_b[j - 1] + self.algn_b
-                j -= 1
+                if (self.DIAGONAL in self.direction_mat[i][j]):
+                    self.algn_a[k] = self.seq_a[i - 1] + self.algn_a[k]
+                    self.algn_b[k] = self.seq_b[j - 1] + self.algn_b[k]
+                    i -= 1
+                    j -= 1
+                elif (self.UP in self.direction_mat[i][j]):
+                    self.algn_a[k] = self.seq_a[i - 1] + self.algn_a[k]
+                    self.algn_b[k] = '-' + self.algn_b[k]
+                    i -= 1
+                elif (self.LEFT in self.direction_mat[i][j]):
+                    self.algn_b[k] = self.seq_b[j - 1] + self.algn_b[k]
+                    self.algn_a[k] = '-' + self.algn_a[k]
+                    j -= 1
     
     def calculate_identity(self):
-        sym = ''
-        iden = 0
-        l = len(self.algn_a)
-        for i in range(l):
-            a1 = self.algn_a[i]
-            a2 = self.algn_b[i]
-            if a1 == a2:
-                sym += a1
-                iden += 1
-            elif a1 != a2 and a1 != '-' and a2 != '-':
-                sym += ' '
-            elif a1 == '-' or a2 == '-':
-                sym += ' '
+        for k in range(len(self.max_i)):
+            sym = ''
+            iden = 0
+            l = len(self.algn_a[k])
+            for i in range(l):
+                a1 = self.algn_a[k][i]
+                a2 = self.algn_b[k][i]
+                if a1 == a2:
+                    sym += a1
+                    iden += 1
+                elif a1 != a2 and a1 != '-' and a2 != '-':
+                    sym += ' '
+                elif a1 == '-' or a2 == '-':
+                    sym += ' '
 
-        self.identity = iden / l
+            self.identity.append(iden / l)
 
     def get_alignments(self) -> list:
         return [{'path': self.traceback_path, 'algn_a': self.algn_a, 'algn_b': self.algn_b}]
