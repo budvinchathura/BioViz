@@ -20,7 +20,7 @@ def pair_nw():
     result = executer.get_results()
 
     resp = {'result': result}
-    print(resp)
+
     return jsonify(resp)
 
 
@@ -30,13 +30,12 @@ def pair_sw():
     match = int(request_data['match'])
     mismatch = int(request_data['mismatch'])
     gap = int(request_data['gap'])
-    sw_algorithm = SW(request_data['seq_a'],
-                      request_data['seq_b'], match, mismatch, gap)
-
-    executer = Executer(sw_algorithm)
-    result = executer.get_results()
-
-    resp = {'result': result}
-    print(resp)
+    output_data = SW(request_data['seq_a'],
+                     request_data['seq_b'], match, mismatch, gap)
+    resp = {'result': {}}
+    resp['result']['algn_a'] = output_data[2]
+    resp['result']['algn_b'] = output_data[3]
+    resp['result']['score_matrix'] = output_data[0]
+    resp['result']['direction_matrix'] = output_data[1]
 
     return jsonify(resp)
