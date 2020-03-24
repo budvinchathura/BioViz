@@ -1,6 +1,8 @@
 # bpy24.py
 
 import numpy as np
+from PairAlign.Algorithms.Algorithm import Algorithm
+
 
 
 # def mch(alpha, beta, match, mismatch, gap):
