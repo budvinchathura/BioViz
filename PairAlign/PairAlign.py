@@ -13,8 +13,8 @@ def pair_nw():
     match = int(request_data['match'])
     mismatch = int(request_data['mismatch'])
     gap = int(request_data['gap'])
-    nw_algorithm = NW(request_data['seq_a'],
-                      request_data['seq_b'], match, mismatch, gap)
+    nw_algorithm = NW(request_data['seq_a'][:100],
+                      request_data['seq_b'][:100], match, mismatch, gap)
 
     executer = Executer(nw_algorithm)
     result = executer.get_results()
@@ -31,8 +31,8 @@ def pair_sw():
     mismatch = int(request_data['mismatch'])
     gap = int(request_data['gap'])
 
-    sw_algorithm = SW(request_data['seq_a'],
-                      request_data['seq_b'], match, mismatch, gap)
+    sw_algorithm = SW(request_data['seq_a'][:100],
+                      request_data['seq_b'][:100], match, mismatch, gap)
 
     executer = Executer(sw_algorithm)
     result = executer.get_results()
