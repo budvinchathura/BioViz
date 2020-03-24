@@ -9,7 +9,6 @@ class Executer():
         self.algorithm.initialize()
         self.algorithm.calculate_score()
         self.algorithm.traceback()
-        self.algorithm.calculate_identity()
         alignments = self.algorithm.get_alignments()
         score = self.algorithm.get_score()
         score_mat = self.algorithm.get_score_matrix()
