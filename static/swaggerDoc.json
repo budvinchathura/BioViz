@@ -1,122 +1,163 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "description": "Interactive Bioinformatics Alignment Algorithms Analyser and Visualizer",
-      "version": "1.0.0",
-      "title": "BioViz",
-      "contact": {
-        "email": "bioviz@abc.com"
-      }
+  "openapi": "3.0.0",
+  "info": {
+    "description": "Interactive Bioinformatics Alignment Algorithms Analyser and Visualizer",
+    "version": "1.0.0",
+    "title": "BioViz",
+    "contact": {
+      "email": "bioviz@abc.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Pair Align - NW",
+      "description": "Align a pair of sequence with NW algorithm"
     },
-    "servers": [
-      {
-        "url": "/"
-      }
-    ],
-    "tags": [
-      {
-        "name": "Pair Align - NW",
-        "description": "Align a pair of sequence with NW algorithm"
-      }
-    ],
-    "paths": {
-      "/pair/nw": {
-        "post": {
-          "tags": [
-            "Pair Align - NW"
-          ],
-          "summary": "Returns alignment, score matrix and direction matrix",
-          "requestBody": {
-            "description": "Pair Align data",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PairAlignRequestPostBody"
-                }
+    {
+      "name": "Pair Align - SW",
+      "description": "Align a pair of sequence with SW algorithm"
+    }
+  ],
+  "paths": {
+    "/pair/nw": {
+      "post": {
+        "tags": [
+          "Pair Align - NW"
+        ],
+        "summary": "Returns alignment, score matrix and direction matrix",
+        "requestBody": {
+          "description": "Sequence data. Use only DNA sequences",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PairAlignRequestPostBody"
               }
             }
-          },
-          "produces": [
-            "application/json"
-          ],
-          "responses": {
-            "200": {
-              "description": "OK",
-              "schema": {
-                "$ref": "#/components/schemas/PairAlignResult"
-              }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/PairAlignResult"
             }
           }
         }
       }
     },
-    "components": {
-      "schemas": {
-        "PairAlignRequestPostBody": {
-          "type": "object",
-          "properties": {
-            "seq_a": {
-              "type": "string"
-              
-            },
-            "seq_b": {
-              "type": "string"
-            },
-            "match":{
-              "type":"number"
-            },
-            "mismatch":{
-              "type":"number"
-            },
-            "gap":{
-              "type":"number"
+    "/pair/sw": {
+      "post": {
+        "tags": [
+          "Pair Align - SW"
+        ],
+        "summary": "Returns alignments, score matrix and direction matrix",
+        "requestBody": {
+          "description": "Sequence data. Use only DNA sequences",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PairAlignRequestPostBody"
+              }
             }
           }
         },
-        "PairAlignResult":{
-          "type":"object",
-          "properties":{
-            "result":{
-              "type":"object",
-              "properties":{
-                "alignments": {
-                  "type": "array",
-                  "items":{
-                    "type":"object",
-                    "properties":{
-                      "algn_a":{
-                        "type":"string"
-                      },
-                      "algn_b":{
-                        "type":"string"
-                      },
-                      "path":{
-                        "type":"array",
-                        "items":{
-                          "type":"integer"
-                        }
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/PairAlignResult"
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PairAlignRequestPostBody": {
+        "type": "object",
+        "properties": {
+          "seq_a": {
+            "type": "string",
+            "name":"DNA sequence 1"
+            
+          },
+          "seq_b": {
+            "type": "string",
+            "name":"DNA sequence 2"
+          },
+          "match":{
+            "type":"number",
+            "name":"Match score (positive integer)"
+          },
+          "mismatch":{
+            "type":"number",
+            "name":"Mismatch penalty (negative integer)"
+          },
+          "gap":{
+            "type":"number",
+            "name":"Gap penalty (negative integer)"
+          }
+        }
+      },
+      "PairAlignResult":{
+        "type":"object",
+        "properties":{
+          "result":{
+            "type":"object",
+            "properties":{
+              "alignments": {
+                "type": "array",
+                "items":{
+                  "type":"object",
+                  "properties":{
+                    "algn_a":{
+                      "type":"string"
+                    },
+                    "algn_b":{
+                      "type":"string"
+                    },
+                    "identity":{
+                      "type":"float"
+                    },
+                    "path":{
+                      "type":"array",
+                      "items":{
+                        "type":"integer"
                       }
                     }
-
                   }
-                  
-                },
-                "score": {
-                  "type": "integer"
-                },
-                "direction_matrix":{
-                  "type":"array",
-                  "items":{
-                    "type": "integer"
-                  }                    
-                },
-                "score_matrix":{
-                  "type":"array",
-                  "items":{
-                    "type": "integer"
-                  }  
+
                 }
+                
+              },
+              "score": {
+                "type": "integer"
+              },
+              "direction_matrix":{
+                "type":"array",
+                "items":{
+                  "type": "integer"
+                }                    
+              },
+              "score_matrix":{
+                "type":"array",
+                "items":{
+                  "type": "integer"
+                }  
               }
             }
           }
@@ -124,3 +165,4 @@
       }
     }
   }
+}
