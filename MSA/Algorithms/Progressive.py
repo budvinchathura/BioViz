@@ -14,6 +14,7 @@ class Progressive(Algorithm):
         self.alignments = []
         self.identity = 0
         self.traceback_path = []
+        self.intermediate_profs = []
 
     def align(self):
         seq1 = self.sequences.pop(0)
@@ -25,6 +26,7 @@ class Progressive(Algorithm):
         align_a = result['alignments'][0]['algn_a']
         align_b = result['alignments'][0]['algn_b']
         prof = [align_a, align_b]
+        self.intermediate_profs.append(prof)
         for seq in self.sequences:
             nw_prof_algorithm = NWProf(prof,[seq],self.match_score, self.mismatch_penalty, self.gap_penalty)
             executer = Executer(nw_prof_algorithm)
@@ -32,9 +34,10 @@ class Progressive(Algorithm):
             align_a = result['alignments'][0]['algn_a']
             align_b = result['alignments'][0]['algn_b']
             prof = align_a + align_b
+            self.intermediate_profs.append(prof)
         self.alignments = prof
-        self.traceback_path = result['alignments'][0]['path']
+        # self.traceback_path = result['alignments'][0]['path']
         self.identity = result['alignments'][0]['identity']
 
     def get_alignments(self) -> list:
-        return {'path': self.traceback_path, 'alignments': self.alignments, 'identity': self.identity}
+        return {'alignments': self.alignments, 'intermediate' :self.intermediate_profs, 'identity': self.identity}
