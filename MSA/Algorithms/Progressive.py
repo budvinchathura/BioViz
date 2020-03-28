@@ -12,40 +12,29 @@ class Progressive(Algorithm):
         self.mismatch_penalty = mismatch_penalty
         self.gap_penalty = gap_penalty
         self.alignments = []
-
-    def initialize(self):
-        for i in range(len(self.sequences)):
-           self.sequences[i] = [self.sequences[i], str(i)]
-        self.sequences.sort(key=lambda x: -len(x[0]))
+        self.identity = 0
+        self.traceback_path = []
 
     def align(self):
         seq1 = self.sequences.pop(0)
         seq2 = self.sequences.pop(0)
-        seq1i = seq1[1]
-        seq2i = seq2[1]
-        seq1 = seq1[0]
-        seq2 = seq2[0]
         nw_algorithm = NW(seq1[:100],
                           seq2[:100], self.match_score, self.mismatch_penalty, self.gap_penalty)
         executer = Executer(nw_algorithm)
         result = executer.get_results()
         align_a = result['alignments'][0]['algn_a']
         align_b = result['alignments'][0]['algn_b']
-        self.alignments.append([align_a, seq1i])
-        self.alignments.append([align_b, seq2i])
+        prof = [align_a, align_b]
         for seq in self.sequences:
-            seqi = seq[1]
-            seq = seq[0]
-            nw_prof_algorithm = NWProf([align_a, align_b],[seq],self.match_score, self.mismatch_penalty, self.gap_penalty)
+            nw_prof_algorithm = NWProf(prof,[seq],self.match_score, self.mismatch_penalty, self.gap_penalty)
             executer = Executer(nw_prof_algorithm)
             result = executer.get_results()
             align_a = result['alignments'][0]['algn_a']
             align_b = result['alignments'][0]['algn_b']
-            # self.alignments.append(align_a)
-            self.alignments.append([align_b, seqi])
+            prof = align_a + align_b
+        self.alignments = prof
+        self.traceback_path = result['alignments'][0]['path']
+        self.identity = result['alignments'][0]['identity']
 
     def get_alignments(self) -> list:
-        self.alignments.sort(key=lambda x: x[1])
-        for i in range(len(self.alignments)):
-            self.alignments[i] = self.alignments[i][0]
-        return self.alignments
+        return {'path': self.traceback_path, 'alignments': self.alignments, 'identity': self.identity}

@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class NWProf:
 
     LEFT = 1
@@ -17,10 +18,10 @@ class NWProf:
         self.match_score = match_score
         self.mismatch_penalty = mismatch_penalty
         self.gap_penalty = gap_penalty
-        self.algn_a = ''
-        self.algn_b = ''
+        self.algn_a = [''] * self.len_prof_a
+        self.algn_b = [''] * self.len_prof_b
         self.score = 0
-        self.identity = []
+        self.identity = 0
         self.traceback_path = []
 
         self.score_mat = np.zeros((self.len_a+1, self.len_b+1), dtype=np.int)
@@ -75,35 +76,37 @@ class NWProf:
             self.traceback_path.append([i, j])
 
             if(i > 0 and j > 0 and self.DIAGONAL in self.direction_mat[i][j]):
-                self.algn_a = self.prof_a[0][i-1]+self.algn_a
-                self.algn_b = self.prof_b[0][j-1]+self.algn_b
+                for k in range(self.len_prof_a):
+                    self.algn_a[k] = self.prof_a[k][i-1]+self.algn_a[k]
+                for l in range(self.len_prof_b):
+                    self.algn_b[l] = self.prof_b[l][j-1]+self.algn_b[l]
                 i -= 1
                 j -= 1
             elif(i > 0 and self.UP in self.direction_mat[i][j]):
-                self.algn_a = self.prof_a[0][i-1]+self.algn_a
-                self.algn_b = '-'+self.algn_b
+                for k in range(self.len_prof_a):
+                    self.algn_a[k] = self.prof_a[k][i-1]+self.algn_a[k]
+                for l in range(self.len_prof_b):
+                    self.algn_b[l] = '-'+self.algn_b[l]
                 i -= 1
             elif(j > 0 and self.LEFT in self.direction_mat[i][j]):
-                self.algn_a = '-'+self.algn_a
-                self.algn_b = self.prof_b[0][j-1]+self.algn_b
+                for k in range(self.len_prof_a):
+                    self.algn_a[k] = '-'+self.algn_a[k]
+                for l in range(self.len_prof_b):
+                    self.algn_b[l] = self.prof_b[l][j-1]+self.algn_b[l]
                 j -= 1
 
     def calculate_identity(self):
-        sym = ''
         iden = 0
-        l = len(self.algn_a)
-        for i in range(l):
-            a1 = self.algn_a[i]
-            a2 = self.algn_b[i]
-            if a1 == a2:
-                sym += a1
-                iden += 1
-            elif a1 != a2 and a1 != '-' and a2 != '-':
-                sym += ' '
-            elif a1 == '-' or a2 == '-':
-                sym += ' '
+        l = len(self.algn_a[0])
+        for k in range(self.len_prof_a):
+            for j in range(self.len_prof_b):
+                for i in range(l):
+                    a1 = self.algn_a[k][i]
+                    a2 = self.algn_b[j][i]
+                    if a1 == a2:
+                        iden += 1
 
-        self.identity = iden / l
+        self.identity = iden / (l * self.len_prof_a * self.len_prof_b)
 
     def get_alignments(self) -> list:
         return [{'path': self.traceback_path, 'algn_a': self.algn_a, 'algn_b': self.algn_b, 'identity': self.identity}]
