@@ -23,7 +23,7 @@ class ProgressiveOptimal(Algorithm):
 
     def initialize(self):
         for seqi in range(self.len_seq):
-            self.profiles[seqi] = self.sequences[seqi]
+            self.profiles[seqi+1] = self.sequences[seqi]
             self.sequences[seqi] = [seqi, self.sequences[seqi]]            
 
     def align(self):
@@ -59,11 +59,11 @@ class ProgressiveOptimal(Algorithm):
                 seq_id1 = a[0]
                 seq_id2 = b[0]
             if(len(seq1) == 1 and len(seq2) == 1):
-                children = [{"id" : seq_id1}, {"id" : seq_id2}]
+                children = [{"id" : seq_id1+1}, {"id" : seq_id2+1}]
             elif(len(seq1) == 1 and len(seq2) != 1):
-                children = [{"id" : seq_id1}, temp_prof_data[seq_id2]]
+                children = [{"id" : seq_id1+1}, temp_prof_data[seq_id2]]
             elif(len(seq1) == 1 and len(seq2) != 1):
-                children = [temp_prof_data[seq_id1], {"id" : seq_id2}]
+                children = [temp_prof_data[seq_id1], {"id" : seq_id2+1}]
             else:
                 children = [temp_prof_data[seq_id1], temp_prof_data[seq_id2]]
             nw_prof_algorithm = NWProf(seq1, seq2, self.match_score, self.mismatch_penalty, self.gap_penalty)
@@ -72,8 +72,8 @@ class ProgressiveOptimal(Algorithm):
             align_a = result['alignments'][0]['algn_a']
             align_b = result['alignments'][0]['algn_b']
             prof = align_a + align_b
-            self.profiles[x + self.len_seq -1] = prof
-            graph = {"id": x + self.len_seq -1 , "children" : children}
+            self.profiles[x + self.len_seq] = prof
+            graph = {"id": x + self.len_seq , "children" : children}
             temp_prof_data[x + self.len_seq -1 ] = graph
             self.sequences.append([x + self.len_seq -1, prof])
             l = len(self.sequences)
@@ -98,4 +98,4 @@ class ProgressiveOptimal(Algorithm):
     def rearrange(self):
         for i in range(self.len_seq):
             index = self.order[i]
-            self.ordered_alignments[index] = self.alignments[i]
+            self.ordered_alignments[index-1] = self.alignments[i]
