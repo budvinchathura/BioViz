@@ -14,16 +14,15 @@ class ProgressiveOptimal(Algorithm):
         self.mismatch_penalty = mismatch_penalty
         self.gap_penalty = gap_penalty
         self.alignments = []
-        self.profiles = []
         self.identity = 0
-        self.intermediate_profs = {}
+        self.profiles = {}
+        self.graph = {}
+        self.profiles = {}
 
     def initialize(self):
         for seqi in range(self.len_seq):
-            self.intermediate_profs[seqi] = self.sequences[seqi]
-            self.sequences[seqi] = [seqi, self.sequences[seqi]]
-        print(self.intermediate_profs)
-            
+            self.profiles[seqi] = self.sequences[seqi]
+            self.sequences[seqi] = [seqi, self.sequences[seqi]]            
 
     def align(self):
         l = self.len_seq
@@ -59,33 +58,33 @@ class ProgressiveOptimal(Algorithm):
                 seq_id2 = b[0]
             if(len(seq1) == 1 and len(seq2) == 1):
                 children = [{"id" : seq_id1}, {"id" : seq_id2}]
-            # print(temp_prof_data)
             elif(len(seq1) == 1 and len(seq2) != 1):
                 children = [{"id" : seq_id1}, temp_prof_data[seq_id2]]
             elif(len(seq1) == 1 and len(seq2) != 1):
                 children = [temp_prof_data[seq_id1], {"id" : seq_id2}]
             else:
                 children = [temp_prof_data[seq_id1], temp_prof_data[seq_id2]]
-            # print(children)
-            # print(x)
             nw_prof_algorithm = NWProf(seq1, seq2, self.match_score, self.mismatch_penalty, self.gap_penalty)
             executer = Executer(nw_prof_algorithm)
             result = executer.get_results()
             align_a = result['alignments'][0]['algn_a']
             align_b = result['alignments'][0]['algn_b']
             prof = align_a + align_b
-            self.intermediate_profs[x + self.len_seq -1] = prof
-            prof_data = {"id": x + self.len_seq -1 , "Children" : children}
-            # print(prof_data)
-            temp_prof_data[x + self.len_seq -1 ] = prof_data
-            # children = [prof_data]
-             # self.profiles.append(prof)
+            self.profiles[x + self.len_seq -1] = prof
+            graph = {"id": x + self.len_seq -1 , "children" : children}
+            temp_prof_data[x + self.len_seq -1 ] = graph
             self.sequences.append([x + self.len_seq -1, prof])
             l = len(self.sequences)
             x += 1
-        self.profiles.append({'graph': prof_data, 'profiles': self.intermediate_profs})
+        self.graph = graph
         self.alignments = prof
         self.identity = result['alignments'][0]['identity']
 
     def get_alignments(self) -> list:
-        return {'alignments': self.alignments, 'intermediate' :self.profiles, 'identity': self.identity}
+        # self.get_order()
+        return {'alignments': self.alignments,'graph': self.graph, 'profiles': self.profiles , 'identity': self.identity}
+
+    def get_order(self):
+        order = []
+        for profile in self.xxxx:
+            print(profile['graph'])

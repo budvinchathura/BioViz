@@ -14,12 +14,12 @@ class Progressive(Algorithm):
         self.gap_penalty = gap_penalty
         self.alignments = []
         self.identity = 0
-        self.profiles = []
-        self.intermediate_profs = {}
+        self.graph = {}
+        self.profiles = {}
 
     def initialize(self):
         for seqi in range(self.len_seq):
-            self.intermediate_profs[seqi] = self.sequences[seqi]
+            self.profiles[seqi] = self.sequences[seqi]
 
     def align(self):
         seq1 = self.sequences[0]
@@ -34,12 +34,13 @@ class Progressive(Algorithm):
             align_a = result['alignments'][0]['algn_a']
             align_b = result['alignments'][0]['algn_b']
             prof = align_a + align_b
-            self.intermediate_profs[seqi + self.len_seq -1] = prof
-            prof_data = {"id": seqi + self.len_seq -1 , "Children" : children}
-            children = [prof_data]
-        self.profiles.append({'graph': prof_data, 'profiles': self.intermediate_profs})
+            self.profiles[seqi + self.len_seq -1] = prof
+            graph = {"id": seqi + self.len_seq -1 , "children" : children}
+            children = [graph]
+        # self.xxxx.append({'graph': graph, 'xxxx': self.profiles})
+        self.graph = graph
         self.alignments = prof
         self.identity = result['alignments'][0]['identity']
 
     def get_alignments(self) -> list:
-        return {'alignments': self.alignments, 'intermediate' :self.profiles, 'identity': self.identity}
+        return {'alignments': self.alignments,'graph': self.graph, 'profiles': self.profiles , 'identity': self.identity}
