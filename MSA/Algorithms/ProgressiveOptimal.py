@@ -18,6 +18,8 @@ class ProgressiveOptimal(Algorithm):
         self.profiles = {}
         self.graph = {}
         self.profiles = {}
+        self.order = []
+        self.ordered_alignments = [''] * self.len_seq
 
     def initialize(self):
         for seqi in range(self.len_seq):
@@ -81,10 +83,19 @@ class ProgressiveOptimal(Algorithm):
         self.identity = result['alignments'][0]['identity']
 
     def get_alignments(self) -> list:
-        # self.get_order()
-        return {'alignments': self.alignments,'graph': self.graph, 'profiles': self.profiles , 'identity': self.identity}
+        self.get_order(self.graph)
+        self.rearrange()
+        return {'alignments': self.ordered_alignments,'graph': self.graph, 'profiles': self.profiles , 'identity': self.identity}
 
-    def get_order(self):
-        order = []
-        for profile in self.xxxx:
-            print(profile['graph'])
+    def get_order(self, graph):
+        if 'children' in graph:
+            for g in graph['children']:
+                self.get_order(g)
+        else:
+            self.order.append(graph['id'])
+            return
+        
+    def rearrange(self):
+        for i in range(self.len_seq):
+            index = self.order[i]
+            self.ordered_alignments[index] = self.alignments[i]
