@@ -3,7 +3,6 @@ from MSA.Algorithms.NWProf import NWProf
 from PairAlign.Executer import Executer
 
 
-
 class Progressive(Algorithm):
     """
     Class which implements non optimal progressive, multiple sequence alignment algorithm
@@ -16,9 +15,9 @@ class Progressive(Algorithm):
         self.mismatch_penalty = mismatch_penalty
         self.gap_penalty = gap_penalty
         self.alignments = []
-        self.identity = 0
-        self.graph = {}
         self.profiles = {}
+        self.graph = {}
+        self.identity = 0
 
     def initialize(self):
         for seq_i in range(self.len_seq):
@@ -43,7 +42,6 @@ class Progressive(Algorithm):
             children = [graph]
         self.graph = graph
         self.alignments = prof
-        self.identity = result['alignments'][0]['identity']
 
     def calculate_identity(self):
         prof_n = len(self.alignments)

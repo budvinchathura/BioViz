@@ -24,7 +24,6 @@ class NWProf:
         self.algn_a = [''] * self.len_prof_a
         self.algn_b = [''] * self.len_prof_b
         self.score = 0
-        self.identity = 0
         self.traceback_path = []
 
         self.score_mat = np.zeros((self.len_a+1, self.len_b+1), dtype=np.int)
@@ -106,31 +105,18 @@ class NWProf:
                 for k in range(self.len_prof_b):
                     self.algn_b[k] = self.prof_b[k][j-1]+self.algn_b[k]
                 j -= 1
-    
-    # FIXME: Remove this method from NWProf Class. Calculating identity is not needed in this class.
-    # Also remove self.identity attribute
+
     def calculate_identity(self):
         """
         Calculates identity(similarity) in the final alignment
         """
-        iden = 0
-        algn_len = len(self.algn_a[0])
-        for k in range(self.len_prof_a):
-            for j in range(self.len_prof_b):
-                for i in range(algn_len):
-                    a_1 = self.algn_a[k][i]
-                    a_2 = self.algn_b[j][i]
-                    if a_1 == a_2:
-                        iden += 1
-
-        self.identity = iden / (algn_len * self.len_prof_a * self.len_prof_b)
-
+        pass
     def get_alignments(self) -> list:
         """
         Returns final alignment results
         """
         return [{'path': self.traceback_path, 'algn_a': self.algn_a,
-                 'algn_b': self.algn_b, 'identity': self.identity}]
+                 'algn_b': self.algn_b}]
 
     def get_score(self) -> int:
         """
