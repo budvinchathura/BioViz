@@ -1,7 +1,7 @@
 import numpy as np
 from MSA.Algorithms.Algorithm import Algorithm
-from PairAlign.Executer import Executer
 from MSA.Algorithms.NWProf import NWProf
+from PairAlign.Executer import Executer
 
 
 class ProgressiveOptimal(Algorithm):
@@ -18,18 +18,21 @@ class ProgressiveOptimal(Algorithm):
         self.identity = 0
         self.order = []
         self.ordered_alignments = [''] * self.len_seq
+        super().__init__()
 
     def initialize(self):
         for seqi in range(self.len_seq):
             self.profiles[seqi+1] = self.sequences[seqi]
-            self.sequences[seqi] = [seqi, self.sequences[seqi]]
+            self.sequences[seqi] = [seqi, [self.sequences[seqi]]]
 
     def align(self):
         l = self.len_seq
         x = 1
         temp_prof_data = {}
         while l > 1:
-            similarity_matrix = np.zeros((l, l))
+            current_max_score = float('-inf')
+            current_best_result = []
+            current_best_pair = []
             for i in range(l):
                 for j in range(i, l):
                     if i == j:
@@ -39,22 +42,25 @@ class ProgressiveOptimal(Algorithm):
                     executer = Executer(nw_prof_algorithm)
                     result = executer.get_results()
                     score = result['score']
-                    similarity_matrix[i][j] = score
-            seq1i, seq2i = np.where(
-                similarity_matrix == np.amax(similarity_matrix))
-            seq1i, seq2i = seq1i[0], seq2i[0]
+
+                    if(score > current_max_score):
+                        current_max_score = score
+                        current_best_result = result
+                        current_best_pair = [i, j]
+
+            seq1i, seq2i = current_best_pair
             if seq1i > seq2i:
                 a = self.sequences.pop(seq1i)
                 b = self.sequences.pop(seq2i)
-                seq1 = a[1] if isinstance(a[1], list) else [a[1]]
-                seq2 = b[1] if isinstance(b[1], list) else [b[1]]
+                seq1 = a[1]
+                seq2 = b[1]
                 seq_id1 = a[0]
                 seq_id2 = b[0]
             else:
                 b = self.sequences.pop(seq2i)
                 a = self.sequences.pop(seq1i)
-                seq2 = b[1] if isinstance(b[1], list) else [b[1]]
-                seq1 = a[1] if isinstance(a[1], list) else [a[1]]
+                seq2 = b[1]
+                seq1 = a[1]
                 seq_id1 = a[0]
                 seq_id2 = b[0]
             if(len(seq1) == 1 and len(seq2) == 1):
@@ -65,12 +71,12 @@ class ProgressiveOptimal(Algorithm):
                 children = [temp_prof_data[seq_id1], {"id": seq_id2+1}]
             else:
                 children = [temp_prof_data[seq_id1], temp_prof_data[seq_id2]]
-            nw_prof_algorithm = NWProf(
-                seq1, seq2, self.match_score, self.mismatch_penalty, self.gap_penalty)
-            executer = Executer(nw_prof_algorithm)
-            result = executer.get_results()
-            align_a = result['alignments'][0]['algn_a']
-            align_b = result['alignments'][0]['algn_b']
+            # nw_prof_algorithm = NWProf(
+            #     seq1, seq2, self.match_score, self.mismatch_penalty, self.gap_penalty)
+            # executer = Executer(nw_prof_algorithm)
+            # result = executer.get_results()
+            align_a = current_best_result['alignments'][0]['algn_a']
+            align_b = current_best_result['alignments'][0]['algn_b']
             prof = align_a + align_b
             self.profiles[x + self.len_seq] = prof
             graph = {"id": x + self.len_seq, "children": children}
@@ -84,7 +90,8 @@ class ProgressiveOptimal(Algorithm):
     def get_alignments(self) -> list:
         self.get_order(self.graph)
         self.rearrange()
-        return {'alignments': self.ordered_alignments, 'graph': self.graph, 'profiles': self.profiles, 'identity': self.identity}
+        return {'alignments': self.ordered_alignments, 'graph': self.graph, 
+                'profiles': self.profiles, 'identity': self.identity}
 
     def get_order(self, graph):
         '''Get order of calculated aligngments vs input'''
@@ -100,16 +107,3 @@ class ProgressiveOptimal(Algorithm):
         for i in range(self.len_seq):
             index = self.order[i]
             self.ordered_alignments[index-1] = self.alignments[i]
-
-    def calculate_identity(self):
-        prof_n = len(self.alignments)
-        len_algn = len(self.alignments[0])
-        iden = 0
-        for i in range(prof_n):
-            for j in range(i+1, prof_n):
-                for k in range(len_algn):
-                    ch_1 = self.alignments[i][k]
-                    ch_2 = self.alignments[j][k]
-                    if(ch_1 == ch_2 and ch_1 != '-' and ch_2 != '-'):
-                        iden += 1
-        self.identity = 2 * iden / (len_algn * prof_n * (prof_n-1))

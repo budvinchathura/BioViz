@@ -48,7 +48,9 @@ class NWProf:
         score = 0
         for i in range(self.len_prof_a):
             for j in range(self.len_prof_b):
-                if self.prof_a[i][a_i] == self.prof_b[j][b_i]:
+                if self.prof_a[i][a_i] == '-' or self.prof_b[j][b_i] == '-':
+                    score += self.mismatch_penalty
+                elif self.prof_a[i][a_i] == self.prof_b[j][b_i]:
                     score += self.match_score
                 else:
                     score += self.mismatch_penalty
@@ -61,8 +63,10 @@ class NWProf:
         for i in range(1, self.len_a + 1):
             for j in range(1, self.len_b + 1):
                 match = self.score_mat[i-1][j-1] + self.__similarity(i-1, j-1)
-                delete = self.score_mat[i-1][j] + self.gap_penalty
-                insert = self.score_mat[i][j-1] + self.gap_penalty
+                delete = self.score_mat[i-1][j] + \
+                    self.gap_penalty*self.len_prof_b*self.len_prof_a
+                insert = self.score_mat[i][j-1] + \
+                    self.gap_penalty*self.len_prof_a*self.len_prof_b
 
                 max_value = max(match, delete, insert)
 
@@ -110,7 +114,7 @@ class NWProf:
         """
         Calculates identity(similarity) in the final alignment
         """
-        pass
+
     def get_alignments(self) -> list:
         """
         Returns final alignment results

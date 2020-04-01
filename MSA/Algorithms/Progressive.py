@@ -18,6 +18,7 @@ class Progressive(Algorithm):
         self.profiles = {}
         self.graph = {}
         self.identity = 0
+        super().__init__()
 
     def initialize(self):
         for seq_i in range(self.len_seq):
@@ -42,19 +43,6 @@ class Progressive(Algorithm):
             children = [graph]
         self.graph = graph
         self.alignments = prof
-
-    def calculate_identity(self):
-        prof_n = len(self.alignments)
-        len_algn = len(self.alignments[0])
-        iden = 0
-        for i in range(prof_n):
-            for j in range(i+1, prof_n):
-                for k in range(len_algn):
-                    ch_1 = self.alignments[i][k]
-                    ch_2 = self.alignments[j][k]
-                    if(ch_1 == ch_2 and ch_1 != '-' and ch_2 != '-'):
-                        iden += 1
-        self.identity = 2 * iden / (len_algn * prof_n * (prof_n-1))
 
     def get_alignments(self) -> list:
         return {'alignments': self.alignments, 'graph': self.graph,
