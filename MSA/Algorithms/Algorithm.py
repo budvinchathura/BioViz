@@ -1,14 +1,27 @@
 from abc import ABC, abstractmethod
 
 class Algorithm(ABC):
+    """
+    Abstract Class for MSA algorithm classes
+    """
 
     @abstractmethod
     def initialize(self):
-        pass
-    
+        """
+        Initializes values for DP matrices
+        """
     @abstractmethod
     def align(self):
-        pass
-
+        """
+        Executes alignment algorithm
+        """
+    @abstractmethod
+    def calculate_identity(self):
+        """
+        Calculates identity factor in final alignment
+        """
+    @abstractmethod
     def get_alignments(self) -> list:
-        pass
+        """
+        Returns final alignment
+        """

@@ -1,6 +1,5 @@
 import numpy as np
 from MSA.Algorithms.Algorithm import Algorithm
-from PairAlign.Algorithms.NW import NW
 from PairAlign.Executer import Executer
 from MSA.Algorithms.NWProf import NWProf
 
@@ -99,3 +98,7 @@ class ProgressiveOptimal(Algorithm):
         for i in range(self.len_seq):
             index = self.order[i]
             self.ordered_alignments[index-1] = self.alignments[i]
+
+    # TODO: Implement this method, just like in Progressive.py
+    def calculate_identity(self):
+        pass

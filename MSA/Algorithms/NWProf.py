@@ -2,6 +2,9 @@ import numpy as np
 
 
 class NWProf:
+    """
+    Helper Class for alignining two profiles with NW algorithm
+    """
 
     LEFT = 1
     DIAGONAL = 2
@@ -29,6 +32,9 @@ class NWProf:
             (self.len_a+1, self.len_b+1), dtype=object)
 
     def initialize(self):
+        """
+        Initializes matrices
+        """
         self.direction_mat[0][0] = [0]
 
         for i in range(1, self.len_a+1):
@@ -50,6 +56,9 @@ class NWProf:
         return score
 
     def calculate_score(self):
+        """
+        Fills DP score matrix
+        """
         for i in range(1, self.len_a + 1):
             for j in range(1, self.len_b + 1):
                 match = self.score_mat[i-1][j-1] + self.__similarity(i-1, j-1)
@@ -70,6 +79,9 @@ class NWProf:
         self.score = int(self.score_mat[self.len_a][self.len_b])
 
     def traceback(self):
+        """
+        Finds traceback path using score matrix and direction matrix
+        """
         i = self.len_a
         j = self.len_b
         while(i > 0 or j > 0):
@@ -78,44 +90,62 @@ class NWProf:
             if(i > 0 and j > 0 and self.DIAGONAL in self.direction_mat[i][j]):
                 for k in range(self.len_prof_a):
                     self.algn_a[k] = self.prof_a[k][i-1]+self.algn_a[k]
-                for l in range(self.len_prof_b):
-                    self.algn_b[l] = self.prof_b[l][j-1]+self.algn_b[l]
+                for k in range(self.len_prof_b):
+                    self.algn_b[k] = self.prof_b[k][j-1]+self.algn_b[k]
                 i -= 1
                 j -= 1
             elif(i > 0 and self.UP in self.direction_mat[i][j]):
                 for k in range(self.len_prof_a):
                     self.algn_a[k] = self.prof_a[k][i-1]+self.algn_a[k]
-                for l in range(self.len_prof_b):
-                    self.algn_b[l] = '-'+self.algn_b[l]
+                for k in range(self.len_prof_b):
+                    self.algn_b[k] = '-'+self.algn_b[k]
                 i -= 1
             elif(j > 0 and self.LEFT in self.direction_mat[i][j]):
                 for k in range(self.len_prof_a):
                     self.algn_a[k] = '-'+self.algn_a[k]
-                for l in range(self.len_prof_b):
-                    self.algn_b[l] = self.prof_b[l][j-1]+self.algn_b[l]
+                for k in range(self.len_prof_b):
+                    self.algn_b[k] = self.prof_b[k][j-1]+self.algn_b[k]
                 j -= 1
-
+    
+    # FIXME: Remove this method from NWProf Class. Calculating identity is not needed in this class.
+    # Also remove self.identity attribute
     def calculate_identity(self):
+        """
+        Calculates identity(similarity) in the final alignment
+        """
         iden = 0
-        l = len(self.algn_a[0])
+        algn_len = len(self.algn_a[0])
         for k in range(self.len_prof_a):
             for j in range(self.len_prof_b):
-                for i in range(l):
-                    a1 = self.algn_a[k][i]
-                    a2 = self.algn_b[j][i]
-                    if a1 == a2:
+                for i in range(algn_len):
+                    a_1 = self.algn_a[k][i]
+                    a_2 = self.algn_b[j][i]
+                    if a_1 == a_2:
                         iden += 1
 
-        self.identity = iden / (l * self.len_prof_a * self.len_prof_b)
+        self.identity = iden / (algn_len * self.len_prof_a * self.len_prof_b)
 
     def get_alignments(self) -> list:
-        return [{'path': self.traceback_path, 'algn_a': self.algn_a, 'algn_b': self.algn_b, 'identity': self.identity}]
+        """
+        Returns final alignment results
+        """
+        return [{'path': self.traceback_path, 'algn_a': self.algn_a,
+                 'algn_b': self.algn_b, 'identity': self.identity}]
 
     def get_score(self) -> int:
+        """
+        Returns final score
+        """
         return self.score
 
     def get_score_matrix(self) -> list:
+        """
+        Returns DP score matrix
+        """
         return self.score_mat.tolist()
 
     def get_direction_matrix(self) -> list:
+        """
+        Returns the direction matrix which has the way each value was calculated
+        """
         return self.direction_mat.tolist()

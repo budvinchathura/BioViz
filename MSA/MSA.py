@@ -9,6 +9,10 @@ msa_bp = Blueprint('msa_bp', __name__)
 
 @msa_bp.route('/progressive', methods=['POST'])
 def progressive():
+    """
+    function handler for /progressive route.
+    returns json output
+    """
     request_data = request.get_json()
     match = int(request_data['match'])
     mismatch = int(request_data['mismatch'])
@@ -25,6 +29,10 @@ def progressive():
 
 @msa_bp.route('/progressive-optimal', methods=['POST'])
 def progressive_optimal():
+    """
+    function handler for /progressive-optimal route.
+    returns json output
+    """
     request_data = request.get_json()
     match = int(request_data['match'])
     mismatch = int(request_data['mismatch'])
