@@ -120,7 +120,7 @@ class SW(Algorithm):
         self.identity = []
         self.traceback_path = []
 
-        self.score_mat = np.zeros((self.len_a + 1, self.len_b + 1))
+        self.score_mat = np.zeros((self.len_a + 1, self.len_b + 1),dtype=np.int)
         self.direction_mat = np.empty((self.len_a + 1, self.len_b + 1), dtype=object)
 
     def initialize(self):
