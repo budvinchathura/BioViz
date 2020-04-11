@@ -11,5 +11,6 @@ app.register_blueprint(game_bp, url_prefix='/game')
 app.register_blueprint(msa_bp, url_prefix='/msa')
 app.register_blueprint(swaggerui_bp, url_prefix=SWAGGER_URL)
 
+
 if __name__ == "__main__":
     app.run(port=4000, debug=True)

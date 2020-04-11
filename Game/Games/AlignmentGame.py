@@ -17,17 +17,23 @@ class AlignmentGame():
                 self.align_result.append('gap')
             elif self.algn_a[i] == self.algn_b[i]:
                 self.score+=self.match_score
-                self.align_result.append('mismatch')
+                self.align_result.append('match')
 
             else:
                 self.score+=self.mismatch_penalty
-                self.align_result.append('match')
+                self.align_result.append('mismatch')
 
     def get_score(self):
         return self.score
     
     def get_align_result(self):
         return self.align_result
+    
+    def get_input_alignments(self):
+        return [self.algn_a,self.algn_b]
+
+    def get_input_panalty(self):
+        return [self.match_score,self.mismatch_penalty,self.gap_penalty]
 
 
 
