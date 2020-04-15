@@ -1,4 +1,5 @@
 import unittest
+from Bio import Align
 
 from PairAlign.Algorithms.NW import NW
 from PairAlign.Algorithms.SW import SW
@@ -14,6 +15,12 @@ class NWTest(unittest.TestCase):
 
         self.algo = NW('AAA', 'AAB', 1, -1, -1)
         self.algo.initialize()
+        self.aligner = Align.PairwiseAligner()
+        self.aligner.mode = 'global'
+        self.aligner.match_score = 1
+        self.aligner.mismatch_score = -1
+        self.aligner.gap_score = -1
+        self.score = self.aligner.score('AAA', 'AAB')
 
     # executed after each test
     def tearDown(self):
@@ -34,7 +41,7 @@ class NWTest(unittest.TestCase):
     def test_score(self):
         self.algo.calculate_score()
         score = self.algo.get_score()
-        self.assertEqual(score, 1)
+        self.assertEqual(score, self.score)
 
     def test_identity(self):
         self.algo.calculate_score()
@@ -50,6 +57,13 @@ class SWTest(unittest.TestCase):
 
         self.algo = SW('AAA', 'AAB', 1, -1, -1)
         self.algo.initialize()
+        self.aligner = Align.PairwiseAligner()
+        self.aligner.mode = 'local'
+        self.aligner.match_score = 1
+        self.aligner.mismatch_score = -1
+        self.aligner.gap_score = -1
+        self.score = self.aligner.score('AAA', 'AAB')
+
 
     # executed after each test
     def tearDown(self):
@@ -72,7 +86,7 @@ class SWTest(unittest.TestCase):
     def test_score(self):
         self.algo.calculate_score()
         score = self.algo.get_score()
-        self.assertEqual(score, 2)
+        self.assertEqual(score, self.score)
 
     def test_identity(self):
         self.algo.calculate_score()
