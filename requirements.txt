@@ -1,10 +1,12 @@
 astroid==2.3.3
 autopep8==1.5
+biopython==1.76
 certifi==2019.11.28
 click==7.1.1
 colorama==0.4.3
 coverage==5.0.4
 Flask==1.1.1
+Flask-Cors==3.0.8
 flask-swagger-ui==3.25.0
 gunicorn==20.0.4
 isort==4.3.21
