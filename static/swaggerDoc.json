@@ -21,6 +21,14 @@
     {
       "name": "Pair Align - SW",
       "description": "Align a pair of sequence with SW algorithm"
+    },
+    {
+      "name": "Progressive - MSA",
+      "description": "Align multiple sequences with non optimal progressive algorithm"
+    },
+    {
+      "name": "Progressive Optimal - MSA",
+      "description": "Align multiple sequences with optimal progressive algorithm"
     }
   ],
   "paths": {
@@ -83,6 +91,66 @@
           }
         }
       }
+    },
+    "/msa/progressive": {
+      "post": {
+        "tags": [
+          "Progressive - MSA"
+        ],
+        "summary": "Returns final alignment, identity and phylogenetic tree",
+        "requestBody": {
+          "description": "Sequence data. Use only DNA sequences",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MSARequestPostBody"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/MSAResult"
+            }
+          }
+        }
+      }
+    },
+    "/msa/progressive-optimal": {
+      "post": {
+        "tags": [
+          "Progressive Optimal - MSA"
+        ],
+        "summary": "Returns final alignment, identity and phylogenetic tree",
+        "requestBody": {
+          "description": "Sequence data. Use only DNA sequences",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MSARequestPostBody"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/components/schemas/MSAResult"
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -100,15 +168,15 @@
             "name":"DNA sequence 2"
           },
           "match":{
-            "type":"number",
+            "type":"integer",
             "name":"Match score (positive integer)"
           },
           "mismatch":{
-            "type":"number",
+            "type":"integer",
             "name":"Mismatch penalty (negative integer)"
           },
           "gap":{
-            "type":"number",
+            "type":"integer",
             "name":"Gap penalty (negative integer)"
           }
         }
@@ -162,6 +230,59 @@
             }
           }
         }
+      },
+      "MSARequestPostBody": {
+        "type": "object",
+        "properties": {
+          "sequences": {
+            "type":"array",
+            "name":"DNA sequences",
+            "items":{
+              "type": "string"
+            }
+          },
+          "match":{
+            "type":"integer",
+            "name":"Match score (positive integer)"
+          },
+          "mismatch":{
+            "type":"integer",
+            "name":"Mismatch penalty (negative integer)"
+          },
+          "gap":{
+            "type":"integer",
+            "name":"Gap penalty (negative integer)"
+          }
+        }
+      },
+      "MSAResult":{
+          "type":"object",
+          "properties":{
+              "result":{
+                  "type":"object",
+                  "properties":{
+                      "alignments":{
+                        "type":"array",
+                        "name":"final alignment",
+                        "items":{
+                          "type": "string"
+                        }
+                      },
+                      "graph":{
+                          "type":"object",
+                          "name":"data for phylogenetic tree"
+                      },
+                      "identity":{
+                          "type":"float",
+                          "name":"identity factor"
+                      },
+                      "profiles":{
+                          "type":"object",
+                          "name":"intermediated profiles in phylogenetic tree"
+                      }
+                  }
+              }
+          }
       }
     }
   }
