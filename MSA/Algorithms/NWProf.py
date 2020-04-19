@@ -37,21 +37,37 @@ class NWProf:
         self.direction_mat[0][0] = [0]
 
         for i in range(1, self.len_a+1):
-            self.score_mat[i][0] = self.gap_penalty*i
+            self.score_mat[i][0] = self.score_mat[i-1][0] + self.__gap_similarity('a', i-1)
             self.direction_mat[i][0] = [self.UP]
 
         for j in range(1, self.len_b+1):
-            self.score_mat[0][j] = self.gap_penalty*j
+            self.score_mat[0][j] = self.score_mat[0][j-1] + self.__gap_similarity('b', j-1)
             self.direction_mat[0][j] = [self.LEFT]
+
+    def __gap_similarity(self, prof_selector, idx):
+        score = 0
+        prof = []
+        if prof_selector == 'a':
+            prof = self.prof_a
+        else:
+            prof = self.prof_b
+        for seq in prof:
+            character = seq[idx]
+            if character == '-':
+                score += self.match_score * len(prof)
+            else:
+                score += self.gap_penalty * len(prof)
+
+        return score
 
     def __similarity(self, a_i, b_i):
         score = 0
         for i in range(self.len_prof_a):
             for j in range(self.len_prof_b):
-                if self.prof_a[i][a_i] == '-' or self.prof_b[j][b_i] == '-':
-                    score += self.mismatch_penalty
-                elif self.prof_a[i][a_i] == self.prof_b[j][b_i]:
+                if self.prof_a[i][a_i] == self.prof_b[j][b_i]:
                     score += self.match_score
+                elif self.prof_a[i][a_i] == '-' or self.prof_b[j][b_i] == '-':
+                    score += self.gap_penalty
                 else:
                     score += self.mismatch_penalty
         return score
@@ -64,9 +80,9 @@ class NWProf:
             for j in range(1, self.len_b + 1):
                 match = self.score_mat[i-1][j-1] + self.__similarity(i-1, j-1)
                 delete = self.score_mat[i-1][j] + \
-                    self.gap_penalty*self.len_prof_b*self.len_prof_a
+                    self.__gap_similarity('a',i-1)
                 insert = self.score_mat[i][j-1] + \
-                    self.gap_penalty*self.len_prof_a*self.len_prof_b
+                    self.__gap_similarity('b',j-1)
 
                 max_value = max(match, delete, insert)
 
@@ -79,7 +95,7 @@ class NWProf:
                 if max_value == insert:
                     self.direction_mat[i][j].append(self.LEFT)
 
-        self.score = int(self.score_mat[self.len_a][self.len_b])
+        self.score = int(self.score_mat[self.len_a][self.len_b])/(self.len_prof_a*self.len_prof_b)
 
     def traceback(self):
         """

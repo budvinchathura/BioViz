@@ -33,7 +33,7 @@ class Algorithm(ABC):
                 for k in range(len_algn):
                     ch_1 = self.alignments[i][k]
                     ch_2 = self.alignments[j][k]
-                    if(ch_1 == ch_2 and ch_1 != '-' and ch_2 != '-'):
+                    if ch_1 == ch_2:
                         iden += 1
         self.identity = 2 * iden / (len_algn * prof_n * (prof_n-1))
 
