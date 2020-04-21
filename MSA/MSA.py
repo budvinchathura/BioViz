@@ -18,7 +18,7 @@ def progressive():
     mismatch = int(request_data['mismatch'])
     gap = int(request_data['gap'])
     progressive_algorithm = Progressive(
-        request_data['sequences'], match, mismatch, gap)
+        request_data['sequences'], request_data['order'], match, mismatch, gap)
 
     executer = Executer(progressive_algorithm)
     result = executer.get_results()
