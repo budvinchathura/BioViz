@@ -5,7 +5,7 @@ from PairAlign.Executer import Executer
 
 class Progressive(Algorithm):
     """
-    Class which implements non optimal progressive, multiple sequence alignment algorithm
+    Class which implements user defined progressive, multiple sequence alignment algorithm
     """
 
     def __init__(self, sequences, order, match_score=1, mismatch_penalty=-1, gap_penalty=-1):
@@ -23,8 +23,8 @@ class Progressive(Algorithm):
 
     def initialize(self):
         for seq_i in range(self.len_seq):
-            self.profiles[seq_i+1] = self.sequences[seq_i]
-            
+            self.profiles[seq_i+1] = self.sequences[seq_i][:1000]
+
     def align(self):
         temp_prof_data = {}
         offset = 1
@@ -34,17 +34,17 @@ class Progressive(Algorithm):
             seq1 = self.profiles[seq_id1]
             seq2 = self.profiles[seq_id2]
             children = []
-            if(isinstance(seq1, str)):
+            if isinstance(seq1, str):
                 seq1 = [seq1]
                 children.append({"id": seq_id1})
             else:
                 children.append(temp_prof_data[seq_id1])
-            if(isinstance(seq2, str)):
+            if isinstance(seq2, str):
                 seq2 = [seq2]
                 children.append({"id": seq_id2})
             else:
                 children.append(temp_prof_data[seq_id2])
-                
+
             nw_prof_algorithm = NWProf(
                 seq1, seq2, self.match_score, self.mismatch_penalty, self.gap_penalty)
             executer = Executer(nw_prof_algorithm)

@@ -24,8 +24,8 @@ class ProgressiveOptimal(Algorithm):
 
     def initialize(self):
         for seqi in range(self.len_seq):
-            self.profiles[seqi+1] = self.sequences[seqi]
-            self.sequences[seqi] = [seqi, [self.sequences[seqi]]]
+            self.profiles[seqi+1] = self.sequences[seqi][:1000]
+            self.sequences[seqi] = [seqi, [self.sequences[seqi][:1000]]]
 
     def align(self):
         remaining = self.len_seq
