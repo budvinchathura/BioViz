@@ -104,7 +104,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MSARequestPostBody"
+                "$ref": "#/components/schemas/MSAProgressiveRequestPostBody"
               }
             }
           }
@@ -134,7 +134,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MSARequestPostBody"
+                "$ref": "#/components/schemas/MSAProgressiveOptimalRequestPostBody"
               }
             }
           }
@@ -231,7 +231,43 @@
           }
         }
       },
-      "MSARequestPostBody": {
+      "MSAProgressiveRequestPostBody": {
+        "type": "object",
+        "properties": {
+          "sequences": {
+            "type":"array",
+            "name":"DNA sequences",
+            "items":{
+              "type": "string"
+            }
+          },
+          "order": {
+            "type":"array",
+            "name":"Order of compairing of pairs",
+            "items":{
+              "type": "array",
+              "maxItems": 2,
+              "minItems": 2,
+              "items":{
+                  "type":"integer"
+              }
+            }
+          },
+          "match":{
+            "type":"integer",
+            "name":"Match score (positive integer)"
+          },
+          "mismatch":{
+            "type":"integer",
+            "name":"Mismatch penalty (negative integer)"
+          },
+          "gap":{
+            "type":"integer",
+            "name":"Gap penalty (negative integer)"
+          }
+        }
+      },
+      "MSAProgressiveOptimalRequestPostBody": {
         "type": "object",
         "properties": {
           "sequences": {
