@@ -7,13 +7,14 @@ class SWExtended(Algorithm):
     DIAGONAL = 2
     UP = 3
 
-    def __init__(self, seq_a, seq_b, match_score=1, mismatch_penalty=-1, opening_gap_penalty=-1, extending_gap_penalty=-1):
+    def __init__(self, seq_a, seq_b, match_score=1, mismatch_penalty=-1, opening_gap_penalty=-1, extending_gap_penalty=-1, priority='HIGHROAD'):
         self.seq_a = seq_a
         self.seq_b = seq_b
 
         self.len_a = len(seq_a)
         self.len_b = len(seq_b)
 
+        self.priority = priority
         self.match_score = match_score
         self.mismatch_penalty = mismatch_penalty
         self.opening_gap_penalty = opening_gap_penalty
@@ -35,14 +36,14 @@ class SWExtended(Algorithm):
         self.score_mat[0][0][0] = 0
 
         for i in range(1, self.len_a + 1):
-            self.score_mat[i][0][1] = 0
-            self.direction_mat[i][0] = [0]
+            self.score_mat[i][0][0] = 0
+            self.direction_mat[i][0] = [[0], [0], [0]]
 
         for j in range(1, self.len_b + 1):
-            self.score_mat[0][j][2] = 0
-            self.direction_mat[0][j] = [0]
+            self.score_mat[0][j][0] = 0
+            self.direction_mat[0][j] = [[0], [0], [0]]
         
-        self.direction_mat[0][0] = [0]
+        self.direction_mat[0][0] = [[0], [0], [0]]
 
     def __similarity(self, a_i, b_i):
         if self.seq_a[a_i] == self.seq_b[b_i]:
@@ -74,15 +75,23 @@ class SWExtended(Algorithm):
                     open_gap_1, extend_gap_1), max(open_gap_2, extend_gap_2)]
 
                 self.score_mat[i][j] = max_value
-                self.direction_mat[i][j] = []
-                if max_value[0] == match or (max_value[0] == insertion_1 and max_value[0] != -np.inf) or (max_value[0] == insertion_2 and max_value[0] != -np.inf):
-                    self.direction_mat[i][j].append(self.DIAGONAL)
-                if (max_value[1] == open_gap_1 and max_value[1] != -np.inf) or (max_value[1] == extend_gap_1 and max_value[1] != -np.inf):
-                    self.direction_mat[i][j].append(self.UP)
-                if (max_value[2] == open_gap_2 and max_value[2] != -np.inf) or (max_value[2] == extend_gap_2 and max_value[2] != -np.inf):
-                    self.direction_mat[i][j].append(self.LEFT)
+                self.direction_mat[i][j] = [[], [], []]
+                if max_value[0] == match: 
+                    self.direction_mat[i][j][0].append((0, self.DIAGONAL))
+                if (max_value[0] == insertion_1 and max_value[0] != -np.inf):
+                    self.direction_mat[i][j][0].append((1, self.DIAGONAL))
+                if (max_value[0] == insertion_2 and max_value[0] != -np.inf):
+                    self.direction_mat[i][j][0].append((2, self.DIAGONAL))
+                if (max_value[1] == open_gap_1 and max_value[1] != -np.inf):
+                    self.direction_mat[i][j][1].append((0, self.UP))
+                if (max_value[1] == extend_gap_1 and max_value[1] != -np.inf):
+                    self.direction_mat[i][j][1].append((1, self.UP))
+                if (max_value[2] == open_gap_2 and max_value[2] != -np.inf):
+                    self.direction_mat[i][j][2].append((0, self.LEFT))
+                if (max_value[2] == extend_gap_2 and max_value[2] != -np.inf):
+                    self.direction_mat[i][j][2].append((2, self.LEFT)) 
                 if max_value[0] == 0:
-                    self.direction_mat[i][j].append(0)
+                    self.direction_mat[i][j][0].append(0)
                 if max_value[0] > self.max_score:
                     self.max_i = [i]
                     self.max_j = [j]
@@ -97,25 +106,104 @@ class SWExtended(Algorithm):
         for k in range(len(self.max_i)):
             i = self.max_i[k]
             j = self.max_j[k]
+            l = 0
             self.algn_a.append('')
             self.algn_b.append('')
             self.traceback_path.append([])
-            while (0 not in self.direction_mat[i][j]):
-                self.traceback_path[k].append([i, j])
+            end = False
+            if self.priority == 'HIGHROAD':
+                while True:
+                    self.traceback_path[k].append([i, j, l])
 
-                if (self.DIAGONAL in self.direction_mat[i][j]):
-                    self.algn_a[k] = self.seq_a[i - 1] + self.algn_a[k]
-                    self.algn_b[k] = self.seq_b[j - 1] + self.algn_b[k]
-                    i -= 1
-                    j -= 1
-                elif (self.UP in self.direction_mat[i][j]):
-                    self.algn_a[k] = self.seq_a[i - 1] + self.algn_a[k]
-                    self.algn_b[k] = '-' + self.algn_b[k]
-                    i -= 1
-                elif (self.LEFT in self.direction_mat[i][j]):
-                    self.algn_b[k] = self.seq_b[j - 1] + self.algn_b[k]
-                    self.algn_a[k] = '-' + self.algn_a[k]
-                    j -= 1
+                    if ((0, self.UP) in self.direction_mat[i][j][l]):
+                        self.algn_a[k] = self.seq_a[i - 1] + self.algn_a[k]
+                        self.algn_b[k] = '-' + self.algn_b[k]
+                        i -= 1
+                        l = 0
+                    elif ((0, self.UP) in self.direction_mat[i][j][l]):
+                        self.algn_a[k] = self.seq_a[i - 1] + self.algn_a[k]
+                        self.algn_b[k] = '-' + self.algn_b[k]
+                        i -= 1
+                        l = 1
+                    elif ((1, self.DIAGONAL) in self.direction_mat[i][j][l]):
+                        self.algn_a[k] = self.seq_a[i - 1] + self.algn_a[k]
+                        self.algn_b[k] = self.seq_b[j - 1] + self.algn_b[k]
+                        i -= 1
+                        j -= 1
+                        l = 1
+                    elif ((0, self.DIAGONAL) in self.direction_mat[i][j][l]):
+                        self.algn_a[k] = self.seq_a[i - 1] + self.algn_a[k]
+                        self.algn_b[k] = self.seq_b[j - 1] + self.algn_b[k]
+                        i -= 1
+                        j -= 1
+                        l = 0
+                    elif ((2, self.DIAGONAL) in self.direction_mat[i][j][l]):
+                        self.algn_a[k] = self.seq_a[i - 1] + self.algn_a[k]
+                        self.algn_b[k] = self.seq_b[j - 1] + self.algn_b[k]
+                        i -= 1
+                        j -= 1
+                        l = 2
+                    elif ((2, self.LEFT) in self.direction_mat[i][j][l]):
+                        self.algn_b[k] = self.seq_b[j - 1] + self.algn_b[k]
+                        self.algn_a[k] = '-' + self.algn_a[k]
+                        j -= 1
+                        l = 0
+                    elif ((2, self.LEFT) in self.direction_mat[i][j][l]):
+                        self.algn_b[k] = self.seq_b[j - 1] + self.algn_b[k]
+                        self.algn_a[k] = '-' + self.algn_a[k]
+                        j -= 1
+                        l = 2
+                    if end:
+                        break
+                    if (0 in self.direction_mat[i][j][0]):
+                        end = True
+            elif self.priority == 'LOWROAD':
+                while True:
+                    self.traceback_path[k].append([i, j, l])
+
+                    if ((2, self.LEFT) in self.direction_mat[i][j][l]):
+                        self.algn_b[k] = self.seq_b[j - 1] + self.algn_b[k]
+                        self.algn_a[k] = '-' + self.algn_a[k]
+                        j -= 1
+                        l = 0
+                    elif ((2, self.LEFT) in self.direction_mat[i][j][l]):
+                        self.algn_b[k] = self.seq_b[j - 1] + self.algn_b[k]
+                        self.algn_a[k] = '-' + self.algn_a[k]
+                        j -= 1
+                        l = 2
+                    elif ((2, self.DIAGONAL) in self.direction_mat[i][j][l]):
+                        self.algn_a[k] = self.seq_a[i - 1] + self.algn_a[k]
+                        self.algn_b[k] = self.seq_b[j - 1] + self.algn_b[k]
+                        i -= 1
+                        j -= 1
+                        l = 2
+                    elif ((0, self.DIAGONAL) in self.direction_mat[i][j][l]):
+                        self.algn_a[k] = self.seq_a[i - 1] + self.algn_a[k]
+                        self.algn_b[k] = self.seq_b[j - 1] + self.algn_b[k]
+                        i -= 1
+                        j -= 1
+                        l = 0
+                    elif ((1, self.DIAGONAL) in self.direction_mat[i][j][l]):
+                        self.algn_a[k] = self.seq_a[i - 1] + self.algn_a[k]
+                        self.algn_b[k] = self.seq_b[j - 1] + self.algn_b[k]
+                        i -= 1
+                        j -= 1
+                        l = 1
+                    elif ((0, self.UP) in self.direction_mat[i][j][l]):
+                        self.algn_a[k] = self.seq_a[i - 1] + self.algn_a[k]
+                        self.algn_b[k] = '-' + self.algn_b[k]
+                        i -= 1
+                        l = 0
+                    elif ((0, self.UP) in self.direction_mat[i][j][l]):
+                        self.algn_a[k] = self.seq_a[i - 1] + self.algn_a[k]
+                        self.algn_b[k] = '-' + self.algn_b[k]
+                        i -= 1
+                        l = 1
+                    if end:
+                        break
+                    if (0 in self.direction_mat[i][j][0]):
+                        end = True
+            
     
     def calculate_identity(self):
         for k in range(len(self.max_i)):

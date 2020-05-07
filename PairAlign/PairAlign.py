@@ -51,9 +51,10 @@ def pair_nw_affine():
     mismatch = int(request_data['mismatch'])
     opening_gap = int(request_data['opening_gap'])
     extending_gap = int(request_data['extending_gap'])
+    priority = request_data['priority']
 
     nw_affine_algorithm = NWExtended(request_data['seq_a'][:100],
-                      request_data['seq_b'][:100], match, mismatch, opening_gap, extending_gap)
+                      request_data['seq_b'][:100], match, mismatch, opening_gap, extending_gap, priority)
 
     executer = Executer(nw_affine_algorithm)
     result = executer.get_results()
@@ -70,9 +71,10 @@ def pair_sw_affine():
     mismatch = int(request_data['mismatch'])
     opening_gap = int(request_data['opening_gap'])
     extending_gap = int(request_data['extending_gap'])
+    priority = request_data['priority']
 
     sw_affine_algorithm = SWExtended(request_data['seq_a'][:100],
-                      request_data['seq_b'][:100], match, mismatch, opening_gap, extending_gap)
+                      request_data['seq_b'][:100], match, mismatch, opening_gap, extending_gap, priority)
 
     executer = Executer(sw_affine_algorithm)
     result = executer.get_results()
