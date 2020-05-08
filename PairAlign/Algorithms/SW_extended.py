@@ -29,7 +29,7 @@ class SWExtended(Algorithm):
         self.traceback_path = []
 
         self.score_mat = np.full(
-            (self.len_a+1, self.len_b+1, 3), [[-np.inf, -np.inf, -np.inf]])
+            (self.len_a+1, self.len_b+1, 3), [-np.inf, -np.inf, -np.inf])
         self.direction_mat = np.empty((self.len_a + 1, self.len_b + 1), dtype=object)
 
     def initialize(self):
@@ -56,10 +56,8 @@ class SWExtended(Algorithm):
             for j in range(1, self.len_b + 1):
                 match = self.score_mat[i-1][j-1][0] + \
                     self.__similarity(i-1, j-1)
-                insertion_1 = self.score_mat[i-1][j -
-                                                  1][1] + self.__similarity(i-1, j-1)
-                insertion_2 = self.score_mat[i-1][j -
-                                                  1][2] + self.__similarity(i-1, j-1)
+                insertion_1 = self.score_mat[i-1][j-1][1] + self.__similarity(i-1, j-1)
+                insertion_2 = self.score_mat[i-1][j-1][2] + self.__similarity(i-1, j-1)
 
                 open_gap_1 = self.score_mat[i-1][j][0] + \
                     self.opening_gap_penalty + self.extending_gap_penalty
@@ -120,7 +118,7 @@ class SWExtended(Algorithm):
                         self.algn_b[k] = '-' + self.algn_b[k]
                         i -= 1
                         l = 0
-                    elif ((0, self.UP) in self.direction_mat[i][j][l]):
+                    elif ((1, self.UP) in self.direction_mat[i][j][l]):
                         self.algn_a[k] = self.seq_a[i - 1] + self.algn_a[k]
                         self.algn_b[k] = '-' + self.algn_b[k]
                         i -= 1
@@ -143,7 +141,7 @@ class SWExtended(Algorithm):
                         i -= 1
                         j -= 1
                         l = 2
-                    elif ((2, self.LEFT) in self.direction_mat[i][j][l]):
+                    elif ((0, self.LEFT) in self.direction_mat[i][j][l]):
                         self.algn_b[k] = self.seq_b[j - 1] + self.algn_b[k]
                         self.algn_a[k] = '-' + self.algn_a[k]
                         j -= 1
@@ -161,7 +159,7 @@ class SWExtended(Algorithm):
                 while True:
                     self.traceback_path[k].append([i, j, l])
 
-                    if ((2, self.LEFT) in self.direction_mat[i][j][l]):
+                    if ((0, self.LEFT) in self.direction_mat[i][j][l]):
                         self.algn_b[k] = self.seq_b[j - 1] + self.algn_b[k]
                         self.algn_a[k] = '-' + self.algn_a[k]
                         j -= 1
@@ -194,7 +192,7 @@ class SWExtended(Algorithm):
                         self.algn_b[k] = '-' + self.algn_b[k]
                         i -= 1
                         l = 0
-                    elif ((0, self.UP) in self.direction_mat[i][j][l]):
+                    elif ((1, self.UP) in self.direction_mat[i][j][l]):
                         self.algn_a[k] = self.seq_a[i - 1] + self.algn_a[k]
                         self.algn_b[k] = '-' + self.algn_b[k]
                         i -= 1
