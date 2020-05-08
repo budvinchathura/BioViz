@@ -29,11 +29,11 @@ class SWExtended(Algorithm):
         self.traceback_path = []
 
         self.score_mat = np.full(
-            (self.len_a+1, self.len_b+1, 3), [-np.inf, -np.inf, -np.inf])
+            (self.len_a+1, self.len_b+1, 3), ['-inf', '-inf', '-inf'], dtype=object)
         self.direction_mat = np.empty((self.len_a + 1, self.len_b + 1), dtype=object)
 
     def initialize(self):
-        self.score_mat[0][0][0] = 0
+        self.score_mat[0][0] = [0, 0, 0]
 
         for i in range(1, self.len_a + 1):
             self.score_mat[i][0][0] = 0
@@ -54,23 +54,24 @@ class SWExtended(Algorithm):
     def calculate_score(self):
         for i in range(1, self.len_a + 1):
             for j in range(1, self.len_b + 1):
-                match = self.score_mat[i-1][j-1][0] + \
+                match = -np.inf if self.score_mat[i-1][j-1][0] == '-inf' else self.score_mat[i-1][j-1][0] + \
                     self.__similarity(i-1, j-1)
-                insertion_1 = self.score_mat[i-1][j-1][1] + self.__similarity(i-1, j-1)
-                insertion_2 = self.score_mat[i-1][j-1][2] + self.__similarity(i-1, j-1)
+                insertion_1 = -np.inf if self.score_mat[i-1][j-1][1] == '-inf' else self.score_mat[i-1][j-1][1] + self.__similarity(i-1, j-1)
+                insertion_2 = -np.inf if self.score_mat[i-1][j-1][2] == '-inf' else self.score_mat[i-1][j-1][2] + self.__similarity(i-1, j-1)
 
-                open_gap_1 = self.score_mat[i-1][j][0] + \
+                open_gap_1 = -np.inf if self.score_mat[i-1][j][0] == '-inf' else self.score_mat[i-1][j][0] + \
                     self.opening_gap_penalty + self.extending_gap_penalty
-                extend_gap_1 = self.score_mat[i -
-                                              1][j][1] + self.extending_gap_penalty
+                extend_gap_1 = -np.inf if self.score_mat[i-1][j][1] == '-inf' else self.score_mat[i-1][j][1] + self.extending_gap_penalty
 
-                open_gap_2 = self.score_mat[i][j-1][0] + \
+                open_gap_2 = -np.inf if self.score_mat[i][j-1][0] == '-inf' else self.score_mat[i][j-1][0] + \
                     self.opening_gap_penalty + self.extending_gap_penalty
-                extend_gap_2 = self.score_mat[i][j -
-                                                 1][2] + self.extending_gap_penalty
+                extend_gap_2 = -np.inf if self.score_mat[i][j-1][2] == '-inf' else self.score_mat[i][j-1][2] + self.extending_gap_penalty
 
-                max_value = [max(match, insertion_1, insertion_2, 0), max(
-                    open_gap_1, extend_gap_1), max(open_gap_2, extend_gap_2)]
+                max_1 = max(match, insertion_1, insertion_2, 0)
+                max_2 = max(open_gap_1, extend_gap_1)
+                max_3 = max(open_gap_2, extend_gap_2)
+
+                max_value = ['-inf' if max_1 == -np.inf else max_1, '-inf' if max_2 == -np.inf else max_2, '-inf' if max_3 == -np.inf else max_3]
 
                 self.score_mat[i][j] = max_value
                 self.direction_mat[i][j] = [[], [], []]
