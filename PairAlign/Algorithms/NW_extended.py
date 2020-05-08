@@ -55,20 +55,16 @@ class NWExtended(Algorithm):
             for j in range(1, self.len_b + 1):
                 match = self.score_mat[i-1][j-1][0] + \
                     self.__similarity(i-1, j-1)
-                insertion_1 = self.score_mat[i-1][j -
-                                                  1][1] + self.__similarity(i-1, j-1)
-                insertion_2 = self.score_mat[i-1][j -
-                                                  1][2] + self.__similarity(i-1, j-1)
+                insertion_1 = self.score_mat[i-1][j-1][1] + self.__similarity(i-1, j-1)
+                insertion_2 = self.score_mat[i-1][j-1][2] + self.__similarity(i-1, j-1)
 
                 open_gap_1 = self.score_mat[i-1][j][0] + \
                     self.opening_gap_penalty + self.extending_gap_penalty
-                extend_gap_1 = self.score_mat[i -
-                                              1][j][1] + self.extending_gap_penalty
+                extend_gap_1 = self.score_mat[i-1][j][1] + self.extending_gap_penalty
 
                 open_gap_2 = self.score_mat[i][j-1][0] + \
                     self.opening_gap_penalty + self.extending_gap_penalty
-                extend_gap_2 = self.score_mat[i][j -
-                                                 1][2] + self.extending_gap_penalty
+                extend_gap_2 = self.score_mat[i][j-1][2] + self.extending_gap_penalty
 
                 max_value = [max(match, insertion_1, insertion_2), max(
                     open_gap_1, extend_gap_1), max(open_gap_2, extend_gap_2)]
@@ -106,12 +102,12 @@ class NWExtended(Algorithm):
                     self.algn_a = self.seq_a[i-1]+self.algn_a
                     self.algn_b = '-'+self.algn_b
                     i -= 1
-                    k = 0
+                    k = 1
                 elif(i >= 0 and (0, self.UP) in self.direction_mat[i][j][k]):
                     self.algn_a = self.seq_a[i-1]+self.algn_a
                     self.algn_b = '-'+self.algn_b
                     i -= 1
-                    k = 1
+                    k = 0
                 elif(i >= 0 and j >= 0 and (1, self.DIAGONAL) in self.direction_mat[i][j][k]):
                     self.algn_a = self.seq_a[i-1]+self.algn_a
                     self.algn_b = self.seq_b[j-1]+self.algn_b
@@ -148,16 +144,17 @@ class NWExtended(Algorithm):
             while True:
                 self.traceback_path.append([i, j, k])
 
-                if(j >= 0 and (0, self.LEFT) in self.direction_mat[i][j][k]):
-                    self.algn_a = '-'+self.algn_a
-                    self.algn_b = self.seq_b[j-1]+self.algn_b
-                    j -= 1
-                    k = 0
-                elif(j >= 0 and (2, self.LEFT) in self.direction_mat[i][j][k]):
+                if(j >= 0 and (2, self.LEFT) in self.direction_mat[i][j][k]):
                     self.algn_a = '-'+self.algn_a
                     self.algn_b = self.seq_b[j-1]+self.algn_b
                     j -= 1
                     k = 2
+
+                elif(j >= 0 and (0, self.LEFT) in self.direction_mat[i][j][k]):
+                    self.algn_a = '-'+self.algn_a
+                    self.algn_b = self.seq_b[j-1]+self.algn_b
+                    j -= 1
+                    k = 0                
                 elif(i >= 0 and j >= 0 and (2, self.DIAGONAL) in self.direction_mat[i][j][k]):
                     self.algn_a = self.seq_a[i-1]+self.algn_a
                     self.algn_b = self.seq_b[j-1]+self.algn_b
@@ -176,12 +173,12 @@ class NWExtended(Algorithm):
                     i -= 1
                     j -= 1
                     k = 1
-                elif(i >= 0 and (1, self.UP) in self.direction_mat[i][j][k]):
+                elif(i >= 0 and (0, self.UP) in self.direction_mat[i][j][k]):
                     self.algn_a = self.seq_a[i-1]+self.algn_a
                     self.algn_b = '-'+self.algn_b
                     i -= 1
                     k = 0
-                elif(i >= 0 and (0, self.UP) in self.direction_mat[i][j][k]):
+                elif(i >= 0 and (1, self.UP) in self.direction_mat[i][j][k]):
                     self.algn_a = self.seq_a[i-1]+self.algn_a
                     self.algn_b = '-'+self.algn_b
                     i -= 1
