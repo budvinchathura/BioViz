@@ -1,18 +1,22 @@
 import numpy as np
 
 from PairAlign.Algorithms.Algorithm import Algorithm
+from PairAlign.Algorithms.SubstitutionMatrix.subsMat import BLOSSUM
 
 class NWExtended(Algorithm):
     LEFT = 1
     DIAGONAL = 2
     UP = 3
 
-    def __init__(self, seq_a, seq_b, match_score=1, mismatch_penalty=-1, opening_gap_penalty=-1, extending_gap_penalty=-1, priority='HIGHROAD'):
+    def __init__(self, seq_type, sub_mat, seq_a, seq_b, match_score=1, mismatch_penalty=-1, opening_gap_penalty=-1, extending_gap_penalty=-1, priority='HIGHROAD'):
         self.seq_a = seq_a
         self.seq_b = seq_b
 
         self.len_a = len(seq_a)
         self.len_b = len(seq_b)
+
+        self.seq_type = seq_type
+        self.sub_mat = BLOSSUM[sub_mat] if(self.seq_type == 'PROTEIN' and sub_mat != 'DEFAULT') else sub_mat
 
         self.priority = priority
         self.match_score = match_score
@@ -45,10 +49,20 @@ class NWExtended(Algorithm):
         self.direction_mat[0][0] = [[0], [0], [0]]
 
     def __similarity(self, a_i, b_i):
-        if self.seq_a[a_i] == self.seq_b[b_i]:
-            return self.match_score
-        else:
-            return self.mismatch_penalty
+        
+        if self.sub_mat == 'DEFAULT':
+                if self.seq_a[a_i] == self.seq_b[b_i]:
+                    return self.match_score
+                else:
+                    return self.mismatch_penalty
+        
+        elif self.seq_type == 'DNA':
+            char1, char2 = (self.seq_a[a_i], self.seq_b[b_i]) if (self.seq_a[a_i] > self.seq_b[b_i]) else (self.seq_b[b_i], self.seq_a[a_i])
+            return self.sub_mat[char1+char2]
+        elif self.seq_type == 'PROTEIN':
+            char1, char2 = (self.seq_a[a_i], self.seq_b[b_i]) if (self.seq_a[a_i] > self.seq_b[b_i]) else (self.seq_b[b_i], self.seq_a[a_i])
+            return self.sub_mat[(char1, char2)]
+            
 
     def calculate_score(self):
         for i in range(1, self.len_a + 1):
