@@ -1,7 +1,7 @@
 import numpy as np
 
 from PairAlign.Algorithms.Algorithm import Algorithm
-from PairAlign.Algorithms.SubstitutionMatrix.subsMat import BLOSSUM
+from PairAlign.Algorithms.SubstitutionMatrix.subsMat import BLOSUM
 
 class SWExtended(Algorithm):
     LEFT = 1
@@ -16,7 +16,7 @@ class SWExtended(Algorithm):
         self.len_b = len(seq_b)
 
         self.seq_type = seq_type
-        self.sub_mat = BLOSSUM[sub_mat] if(self.seq_type == 'PROTEIN' and sub_mat != 'DEFAULT') else sub_mat
+        self.sub_mat = BLOSUM[sub_mat] if(self.seq_type == 'PROTEIN' and sub_mat != 'DEFAULT') else sub_mat
 
         self.priority = priority
         self.match_score = match_score
@@ -58,9 +58,9 @@ class SWExtended(Algorithm):
         
         elif self.seq_type == 'DNA':
             char1, char2 = (self.seq_a[a_i], self.seq_b[b_i]) if (self.seq_a[a_i] > self.seq_b[b_i]) else (self.seq_b[b_i], self.seq_a[a_i])
-            return self.sub_mat[char1+char2]
+            return int(self.sub_mat[char1+char2])
         elif self.seq_type == 'PROTEIN':
-            char1, char2 = (self.seq_a[a_i], self.seq_b[b_i]) if (self.seq_a[a_i] > self.seq_b[b_i]) else (self.seq_b[b_i], self.seq_a[a_i])
+            char1, char2 = (self.seq_a[a_i], self.seq_b[b_i]) if (self.seq_a[a_i], self.seq_b[b_i]) in self.sub_mat else (self.seq_b[b_i], self.seq_a[a_i])
             return self.sub_mat[(char1, char2)]
 
     def calculate_score(self):
@@ -71,12 +71,10 @@ class SWExtended(Algorithm):
                 insertion_1 = -np.inf if self.score_mat[i-1][j-1][1] == '-inf' else self.score_mat[i-1][j-1][1] + self.__similarity(i-1, j-1)
                 insertion_2 = -np.inf if self.score_mat[i-1][j-1][2] == '-inf' else self.score_mat[i-1][j-1][2] + self.__similarity(i-1, j-1)
 
-                open_gap_1 = -np.inf if self.score_mat[i-1][j][0] == '-inf' else self.score_mat[i-1][j][0] + \
-                    self.opening_gap_penalty + self.extending_gap_penalty
+                open_gap_1 = -np.inf if self.score_mat[i-1][j][0] == '-inf' else self.score_mat[i-1][j][0] + self.opening_gap_penalty
                 extend_gap_1 = -np.inf if self.score_mat[i-1][j][1] == '-inf' else self.score_mat[i-1][j][1] + self.extending_gap_penalty
 
-                open_gap_2 = -np.inf if self.score_mat[i][j-1][0] == '-inf' else self.score_mat[i][j-1][0] + \
-                    self.opening_gap_penalty + self.extending_gap_penalty
+                open_gap_2 = -np.inf if self.score_mat[i][j-1][0] == '-inf' else self.score_mat[i][j-1][0] + self.opening_gap_penalty
                 extend_gap_2 = -np.inf if self.score_mat[i][j-1][2] == '-inf' else self.score_mat[i][j-1][2] + self.extending_gap_penalty
 
                 max_1 = max(match, insertion_1, insertion_2, 0)
@@ -107,7 +105,7 @@ class SWExtended(Algorithm):
                     self.max_i = [i]
                     self.max_j = [j]
                     self.max_score = max_value[0]
-                elif max_value[0] == self.max_score:
+                elif max_value[0] == self.max_score and self.match_score != 0:
                     self.max_i.append(i)
                     self.max_j.append(j)
 
