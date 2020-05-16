@@ -60,18 +60,18 @@ class SWExtended(Algorithm):
 
     def __similarity(self, a_i, b_i):
         if self.sub_mat == 'DEFAULT':
-            if self.seq_a[a_i] == self.seq_b[b_i]:
+            if self.seq_a[a_i].upper() == self.seq_b[b_i].upper():
                 return self.match_score
             return self.mismatch_penalty
 
         if self.seq_type == 'DNA':
-            char1, char2 = (self.seq_a[a_i], self.seq_b[b_i]) \
-                if (self.seq_a[a_i] > self.seq_b[b_i]) else (self.seq_b[b_i], self.seq_a[a_i])
+            char1, char2 = (self.seq_a[a_i].upper(), self.seq_b[b_i].upper()) \
+                if (self.seq_a[a_i] > self.seq_b[b_i]) else (self.seq_b[b_i].upper(), self.seq_a[a_i].upper())
             return int(self.sub_mat[char1+char2])
         if self.seq_type == 'PROTEIN':
-            char1, char2 = (self.seq_a[a_i], self.seq_b[b_i]) \
+            char1, char2 = (self.seq_a[a_i].upper(), self.seq_b[b_i].upper()) \
                 if (self.seq_a[a_i], self.seq_b[b_i]) in self.sub_mat \
-                else (self.seq_b[b_i], self.seq_a[a_i])
+                else (self.seq_b[b_i].upper(), self.seq_a[a_i].upper())
             return self.sub_mat[(char1, char2)]
 
         raise ValueError('Invalid sub_mat type')
@@ -240,8 +240,8 @@ class SWExtended(Algorithm):
             iden = 0
             length = len(self.algn_a[k])
             for i in range(length):
-                ch_1 = self.algn_a[k][i]
-                ch_2 = self.algn_b[k][i]
+                ch_1 = self.algn_a[k][i].upper() if self.algn_a[k][i] != '-' else '-'
+                ch_2 = self.algn_b[k][i].upper() if self.algn_b[k][i] != '-' else '-'
                 if ch_1 == ch_2:
                     sym += ch_1
                     iden += 1
