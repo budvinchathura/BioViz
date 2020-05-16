@@ -3,6 +3,7 @@ from PairAlign.Algorithms.NW import NW
 from PairAlign.Algorithms.SW import SW
 from PairAlign.Algorithms.NW_extended import NWExtended
 from PairAlign.Algorithms.SW_extended import SWExtended
+from PairAlign.Validators.basic import validate_pair_align
 
 from PairAlign.Executer import Executer
 
@@ -12,6 +13,10 @@ pair_align_bp = Blueprint('pair_align_bp', __name__)
 @pair_align_bp.route('/nw', methods=['POST'])
 def pair_nw():
     request_data = request.get_json()
+    status, errors = validate_pair_align(request_data)
+    if not status:
+        return jsonify(errors), 400
+
     match = int(request_data['match'])
     mismatch = int(request_data['mismatch'])
     gap = int(request_data['gap'])
