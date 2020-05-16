@@ -28,9 +28,9 @@ extendedSchema2 = {
 
 extendedSchema3 = {
         "seq_type" : {"required":True, "type":"string", "allowed": ["DNA"]},
-        "sub_mat" : {"required":True, "type":"dict", "keysrules":{"regex":"^[a-zA-Z]{2}$"}, "valuesrules":{'type': 'integer', 'coerce': int}},
-        "seq_a" : {"required":True, "type":"string", "minlength":1, "maxlength":100, "nullable":False, "regex":"^[a-zA-Z]+$"},
-        "seq_b" : {"required":True, "type":"string", "minlength":1, "maxlength":100, "nullable":False, "regex":"^[a-zA-Z]+$"},
+        "sub_mat" : {"required":True, "type":"dict", "keysrules":{"regex":"^[AGTC]{2}$"}, "valuesrules":{'type': 'integer', 'coerce': int}},
+        "seq_a" : {"required":True, "type":"string", "minlength":1, "maxlength":100, "nullable":False, "regex":"^[agtcAGTC]+$"},
+        "seq_b" : {"required":True, "type":"string", "minlength":1, "maxlength":100, "nullable":False, "regex":"^[agtcAGTC]+$"},
         "match" : {"required":False, "nullable":True, 'type': 'integer', 'coerce': int},
         "mismatch" : {"required":False, "nullable":True, 'type': 'integer', 'coerce': int},
         "opening_gap" : {"required":True, "nullable":False, 'type': 'integer', 'coerce': int},
