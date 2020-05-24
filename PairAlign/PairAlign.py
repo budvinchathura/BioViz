@@ -3,7 +3,8 @@ from PairAlign.Algorithms.NW import NW
 from PairAlign.Algorithms.SW import SW
 from PairAlign.Algorithms.NW_extended import NWExtended
 from PairAlign.Algorithms.SW_extended import SWExtended
-from PairAlign.Validators.basic import validate_pair_align
+from PairAlign.Validators.basic import validate_pair_align_basic
+from PairAlign.Validators.extended import validate_pair_align_extended
 
 from PairAlign.Executer import Executer
 
@@ -13,7 +14,7 @@ pair_align_bp = Blueprint('pair_align_bp', __name__)
 @pair_align_bp.route('/nw', methods=['POST'])
 def pair_nw():
     request_data = request.get_json()
-    status, errors = validate_pair_align(request_data)
+    status, errors = validate_pair_align_basic(request_data)
     if not status:
         return jsonify(errors), 400
 
@@ -34,6 +35,10 @@ def pair_nw():
 @pair_align_bp.route('/sw', methods=['POST'])
 def pair_sw():
     request_data = request.get_json()
+    status, errors = validate_pair_align_basic(request_data)
+    if not status:
+        return jsonify(errors), 400
+
     match = int(request_data['match'])
     mismatch = int(request_data['mismatch'])
     gap = int(request_data['gap'])
@@ -52,6 +57,9 @@ def pair_sw():
 @pair_align_bp.route('/nw-affine', methods=['POST'])
 def pair_nw_affine():
     request_data = request.get_json()
+    status, errors = validate_pair_align_extended(request_data)
+    if not status:
+        return jsonify(errors), 400
     
     opening_gap = int(request_data['opening_gap'])
     extending_gap = int(request_data['extending_gap'])
@@ -75,6 +83,9 @@ def pair_nw_affine():
 @pair_align_bp.route('/sw-affine', methods=['POST'])
 def pair_sw_affine():
     request_data = request.get_json()
+    status, errors = validate_pair_align_extended(request_data)
+    if not status:
+        return jsonify(errors), 400
     
     opening_gap = int(request_data['opening_gap'])
     extending_gap = int(request_data['extending_gap'])

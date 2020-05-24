@@ -3,6 +3,8 @@ from flask import Blueprint, jsonify, request
 from MSA.Executer import Executer
 from MSA.Algorithms.Progressive import Progressive
 from MSA.Algorithms.ProgressiveOptimal import ProgressiveOptimal
+from MSA.Validators.msa_validator import validate_msa_progessive
+from MSA.Validators.msa_validator import validate_msa_progessive_optimal
 
 msa_bp = Blueprint('msa_bp', __name__)
 
@@ -14,6 +16,10 @@ def progressive():
     returns json output
     """
     request_data = request.get_json()
+    status, errors = validate_msa_progessive(request_data)
+    if not status:
+        return jsonify(errors), 400
+
     match = int(request_data['match'])
     mismatch = int(request_data['mismatch'])
     gap = int(request_data['gap'])
@@ -34,6 +40,10 @@ def progressive_optimal():
     returns json output
     """
     request_data = request.get_json()
+    status, errors = validate_msa_progessive_optimal(request_data)
+    if not status:
+        return jsonify(errors), 400
+
     match = int(request_data['match'])
     mismatch = int(request_data['mismatch'])
     gap = int(request_data['gap'])

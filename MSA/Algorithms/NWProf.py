@@ -64,10 +64,10 @@ class NWProf:
         score = 0
         for i in range(self.len_prof_a):
             for j in range(self.len_prof_b):
-                if self.prof_a[i][a_i] == self.prof_b[j][b_i]:
-                    score += self.match_score
-                elif self.prof_a[i][a_i] == '-' or self.prof_b[j][b_i] == '-':
+                if self.prof_a[i][a_i] == '-' or self.prof_b[j][b_i] == '-':
                     score += self.gap_penalty
+                elif self.prof_a[i][a_i].upper() == self.prof_b[j][b_i].upper():
+                    score += self.match_score
                 else:
                     score += self.mismatch_penalty
         return score

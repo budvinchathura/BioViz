@@ -31,8 +31,8 @@ class Algorithm(ABC):
         for i in range(prof_n):
             for j in range(i+1, prof_n):
                 for k in range(len_algn):
-                    ch_1 = self.alignments[i][k]
-                    ch_2 = self.alignments[j][k]
+                    ch_1 = self.alignments[i][k].upper() if self.alignments[i][k] != '-' else '-'
+                    ch_2 = self.alignments[j][k].upper() if self.alignments[j][k] != '-' else '-'
                     if ch_1 == ch_2:
                         iden += 1
         self.identity = 2 * iden / (len_algn * prof_n * (prof_n-1))

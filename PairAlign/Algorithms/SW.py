@@ -133,7 +133,7 @@ class SW(Algorithm):
             self.direction_mat[0][j] = [0]
 
     def __similarity(self, a_i, b_i):
-        if self.seq_a[a_i] == self.seq_b[b_i]:
+        if self.seq_a[a_i].upper() == self.seq_b[b_i].upper():
             return self.match_score
         else:
             return self.mismatch_penalty
@@ -161,7 +161,7 @@ class SW(Algorithm):
                     self.max_i = [i]
                     self.max_j = [j]
                     self.max_score = max_value
-                elif max_value == self.max_score:
+                elif max_value == self.max_score  and self.match_score != 0:
                     self.max_i.append(i)
                     self.max_j.append(j)
 
@@ -197,8 +197,8 @@ class SW(Algorithm):
             iden = 0
             l = len(self.algn_a[k])
             for i in range(l):
-                a1 = self.algn_a[k][i]
-                a2 = self.algn_b[k][i]
+                a1 = self.algn_a[k][i].upper() if self.algn_a[k][i] != '-' else '-'
+                a2 = self.algn_b[k][i].upper() if self.algn_b[k][i] != '-' else '-'
                 if a1 == a2:
                     sym += a1
                     iden += 1
