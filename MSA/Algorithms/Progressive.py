@@ -5,11 +5,12 @@ from PairAlign.Executer import Executer
 
 class Progressive(Algorithm):
     """
-    Class which implements non optimal progressive, multiple sequence alignment algorithm
+    Class which implements user defined progressive, multiple sequence alignment algorithm
     """
 
-    def __init__(self, sequences, match_score=1, mismatch_penalty=-1, gap_penalty=-1):
+    def __init__(self, sequences, order, match_score=1, mismatch_penalty=-1, gap_penalty=-1):
         self.sequences = sequences
+        self.order = order
         self.len_seq = len(sequences)
         self.match_score = match_score
         self.mismatch_penalty = mismatch_penalty
@@ -22,25 +23,39 @@ class Progressive(Algorithm):
 
     def initialize(self):
         for seq_i in range(self.len_seq):
-            self.profiles[seq_i+1] = self.sequences[seq_i]
+            self.profiles[seq_i+1] = self.sequences[seq_i][:1000]
 
     def align(self):
-        seq1 = self.sequences[0]
-        prof = [seq1]
-        children = [{"id": 1}]
-        for seqi in range(1, self.len_seq):
-            seq = [self.sequences[seqi]]
-            children.append({"id": seqi+1})
+        temp_prof_data = {}
+        offset = 1
+        for pair in self.order:
+            seq_id1 = pair[0]
+            seq_id2 = pair[1]
+            seq1 = self.profiles[seq_id1]
+            seq2 = self.profiles[seq_id2]
+            children = []
+            if isinstance(seq1, str):
+                seq1 = [seq1]
+                children.append({"id": seq_id1})
+            else:
+                children.append(temp_prof_data[seq_id1])
+            if isinstance(seq2, str):
+                seq2 = [seq2]
+                children.append({"id": seq_id2})
+            else:
+                children.append(temp_prof_data[seq_id2])
+
             nw_prof_algorithm = NWProf(
-                prof, seq, self.match_score, self.mismatch_penalty, self.gap_penalty)
+                seq1, seq2, self.match_score, self.mismatch_penalty, self.gap_penalty)
             executer = Executer(nw_prof_algorithm)
             result = executer.get_results()
             align_a = result['alignments'][0]['algn_a']
             align_b = result['alignments'][0]['algn_b']
             prof = align_a + align_b
-            self.profiles[seqi + self.len_seq] = prof
-            graph = {"id": seqi + self.len_seq, "children": children}
-            children = [graph]
+            self.profiles[offset + self.len_seq] = prof
+            graph = {"id": offset + self.len_seq, "children": children}
+            temp_prof_data[offset + self.len_seq] = graph
+            offset += 1
         self.graph = graph
         self.alignments = prof
 

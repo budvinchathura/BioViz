@@ -108,7 +108,7 @@ class NW(Algorithm):
             self.direction_mat[0][j] = [self.LEFT]
 
     def __similarity(self, a_i, b_i):
-        if self.seq_a[a_i] == self.seq_b[b_i]:
+        if self.seq_a[a_i].upper() == self.seq_b[b_i].upper():
             return self.match_score
         else:
             return self.mismatch_penalty
@@ -158,8 +158,8 @@ class NW(Algorithm):
         iden = 0
         l = len(self.algn_a)
         for i in range(l):
-            a1 = self.algn_a[i]
-            a2 = self.algn_b[i]
+            a1 = self.algn_a[i].upper() if self.algn_a[i] != '-' else '-'
+            a2 = self.algn_b[i].upper() if self.algn_b[i] != '-' else '-'
             if a1 == a2:
                 sym += a1
                 iden += 1

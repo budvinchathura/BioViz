@@ -62,6 +62,74 @@
         }
       }
     },
+    "/pair/nw-affine": {
+        "post": {
+          "tags": [
+            "Pair Align - NW with affine"
+          ],
+          "summary": "Returns alignment, score matrix and direction matrix",
+          "requestBody": {
+            "description": "Sequence data",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                    "oneOf":[
+                        {"$ref": "#/components/schemas/PairAlignDNAExtendedRequestPostBody"},
+                        {"$ref": "#/components/schemas/PairAlignProteinExtendedRequestPostBody"}
+                    ]
+                  
+                }
+              }
+            }
+          },
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "schema": {
+                "$ref": "#/components/schemas/PairAlignResult"
+              }
+            }
+          }
+        }
+      },
+    "/pair/sw-affine": {
+    "post": {
+        "tags": [
+        "Pair Align - SW with affine"
+        ],
+        "summary": "Returns alignment, score matrix and direction matrix",
+        "requestBody": {
+            "description": "Sequence data",
+            "required": true,
+            "content": {
+                "application/json": {
+                    "schema": {
+                        "oneOf":[
+                            {"$ref": "#/components/schemas/PairAlignDNAExtendedRequestPostBody"},
+                            {"$ref": "#/components/schemas/PairAlignProteinExtendedRequestPostBody"}
+                        ]
+                        
+                    }
+                }
+            }
+        },
+        "produces": [
+        "application/json"
+        ],
+        "responses": {
+            "200": {
+                "description": "OK",
+                "schema": {
+                "$ref": "#/components/schemas/PairAlignResult"
+                }
+            }
+        }
+    }
+    },
     "/pair/sw": {
       "post": {
         "tags": [
@@ -104,7 +172,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MSARequestPostBody"
+                "$ref": "#/components/schemas/MSAProgressiveRequestPostBody"
               }
             }
           }
@@ -134,7 +202,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MSARequestPostBody"
+                "$ref": "#/components/schemas/MSAProgressiveOptimalRequestPostBody"
               }
             }
           }
@@ -231,7 +299,136 @@
           }
         }
       },
-      "MSARequestPostBody": {
+      "PairAlignDNAExtendedRequestPostBody": {
+        "type": "object",
+        "properties": {
+          "seq_a": {
+            "type": "string",
+            "name":"DNA sequence 1"
+            
+          },
+          "seq_b": {
+            "type": "string",
+            "name":"DNA sequence 2"
+          },
+          "match":{
+            "type":"integer",
+            "name":"Match score (positive integer)"
+          },
+          "mismatch":{
+            "type":"integer",
+            "name":"Mismatch penalty (negative integer)"
+          },
+          "opening_gap":{
+            "type":"integer",
+            "name":"Open penalty (negative integer)"
+          },
+          "extending_gap":{
+            "type":"integer",
+            "name":"Extend penalty (negative integer)"
+          },
+          "priority":{
+              "type":"string",
+              "name":"Priority for traceback",
+              "enum": ["HIGHROAD", "LOWROAD"]
+          },
+          "seq_type":{
+              "type":"string",
+              "name":"Genome sequence type",
+              "enum": ["DNA"]
+          },
+          "sub_mat":{
+              "type":"object",
+              "properties":{
+                  "AA":{
+                      "type":"integer"
+                  }
+              }
+          }
+        }
+      },
+      "PairAlignProteinExtendedRequestPostBody": {
+        "type": "object",
+        "properties": {
+          "seq_a": {
+            "type": "string",
+            "name":"Protein sequence 1"
+            
+          },
+          "seq_b": {
+            "type": "string",
+            "name":"Protein sequence 2"
+          },
+          "match":{
+            "type":"integer",
+            "name":"Match score (positive integer)"
+          },
+          "mismatch":{
+            "type":"integer",
+            "name":"Mismatch penalty (negative integer)"
+          },
+          "opening_gap":{
+            "type":"integer",
+            "name":"Open penalty (negative integer)"
+          },
+          "extending_gap":{
+            "type":"integer",
+            "name":"Extend penalty (negative integer)"
+          },
+          "priority":{
+              "type":"string",
+              "name":"Priority for traceback",
+              "enum": ["HIGHROAD", "LOWROAD"]
+          },
+          "seq_type":{
+              "type":"string",
+              "name":"Genome sequence type",
+              "enum": ["PROTEIN"]
+          },
+          "sub_mat":{
+              "type":"string",
+              "name" : "Substitution matrix name",
+              "enum": ["DEFAULT","BLOSUM30","BLOSUM45","BLOSUM50","BLOSUM90","BLOSUM90"]
+          }
+        }
+      },
+      "MSAProgressiveRequestPostBody": {
+        "type": "object",
+        "properties": {
+          "sequences": {
+            "type":"array",
+            "name":"DNA sequences",
+            "items":{
+              "type": "string"
+            }
+          },
+          "order": {
+            "type":"array",
+            "name":"Order of compairing of pairs",
+            "items":{
+              "type": "array",
+              "maxItems": 2,
+              "minItems": 2,
+              "items":{
+                  "type":"integer"
+              }
+            }
+          },
+          "match":{
+            "type":"integer",
+            "name":"Match score (positive integer)"
+          },
+          "mismatch":{
+            "type":"integer",
+            "name":"Mismatch penalty (negative integer)"
+          },
+          "gap":{
+            "type":"integer",
+            "name":"Gap penalty (negative integer)"
+          }
+        }
+      },
+      "MSAProgressiveOptimalRequestPostBody": {
         "type": "object",
         "properties": {
           "sequences": {
