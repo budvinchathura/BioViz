@@ -1,0 +1,142 @@
+[
+    {
+      "seq_a": "GAATATCGGCGTTTGCGGCCTGCATTGAGTGCAGCGTATGTTAGCTGCTTCAT",
+      "seq_b": "TTGGAGAGGAACATTCCCATTTTGCGCGGGTCTCGCTAGCTACTGCAAGAT",
+      "match": 1,
+      "mismatch": -8,
+      "gap": -2
+    },
+    {
+      "seq_a": "CGGTAAATTTATGAAGCGTTTCGGCCGCAACGCCACGGTATAGGGCGACCAAA",
+      "seq_b": "TAGGAGTACCTACGCTACGAGATTAATTCCGCTAGTCTGAGGCGAACGGACTCG",
+      "match": 6,
+      "mismatch": -4,
+      "gap": -4
+    },
+    {
+      "seq_a": "TTCGCTTAGGGTTTGATCCATCTACTGCTTCCTAATGATTGCGTCGCATTGT",
+      "seq_b": "CACGGCATACTAACGCCAGAGTCGGTTTCCTCCAACTATCTGTAGTCGGTG",
+      "match": 5,
+      "mismatch": -9,
+      "gap": -4
+    },
+    {
+      "seq_a": "ACCACTTGGTTCCAGCTGCTGGTCGGAAACTGGTACTAACCAGTGGTCGCCATT",
+      "seq_b": "CCGGAAAAATTCTTGCGCACAGGTACAAATGTCACGAGTTTAGGGCCATGGAC",
+      "match": 1,
+      "mismatch": -1,
+      "gap": -3
+    },
+    {
+      "seq_a": "GATCCGAAGGCGGGACATTAGTTTCGCTCATGCACGTGGTCTTCTCTAGGACCG",
+      "seq_b": "TCCTGCATGAAGCACCACTTACCTCTATATCCGCGGAGCTGTCTTTGTGAGTAC",
+      "match": 1,
+      "mismatch": -10,
+      "gap": -10
+    },
+    {
+      "seq_a": "TCCGCTTCTTACCCCAGGCGAGCGGTTAATCTCCTGGTGGAAGGATTAACG",
+      "seq_b": "GGGTTGGAGGCCCTCCGTTGTAAGGAAGAAAACTTCGGACACATGCCCGTAG",
+      "match": 2,
+      "mismatch": -2,
+      "gap": -8
+    },
+    {
+      "seq_a": "GGAGCTAGTCTATGACCCTACCTGCGTATTGGTGAAGTCGTCATACAGGGGG",
+      "seq_b": "GCCTGAAATGGCTCAGGTCCTACTACATCTTTGTGGTTAAGTGCCGCTAGCC",
+      "match": 5,
+      "mismatch": -3,
+      "gap": -4
+    },
+    {
+      "seq_a": "GGCTCGCGAAGAGTAAATAGTCTCCATGGCCGTGTTTCTAAGCTGGGTAC",
+      "seq_b": "ATACTCCGACCGGAACGTGTCATTTACAAAATGCTGGACATGACAGTGAC",
+      "match": 9,
+      "mismatch": -3,
+      "gap": -3
+    },
+    {
+      "seq_a": "AACCGCAAATGCCTCCTGTGCGCTTCTTCGTTACATCGCACGGTTATCATCGGG",
+      "seq_b": "GCTGCGGTATGTGACATGCCTATCTATCTCGTCAAAAGTAAGCTTCCGCCTC",
+      "match": 3,
+      "mismatch": -3,
+      "gap": -7
+    },
+    {
+      "seq_a": "TAACACGCAGCCCCACAACCGATGTAGGTGCCTGGCTGGCTGGAGGTCTAACA",
+      "seq_b": "GTCCCCTCTCACCTGAAAGTTCTATTCATCGATACGAAAGCCATGAAACGTGA",
+      "match": 4,
+      "mismatch": -6,
+      "gap": -3
+    },
+    {
+      "seq_a": "CACCACTGGGCATTATGAGCCCGATTTTGGTCGGCACTTTGTTCAGAGTCTTGA",
+      "seq_b": "GTCACTTTGATTACCTATCCCCAATGCAGGTGCCCATCAGCGGTATTCAGTA",
+      "match": 10,
+      "mismatch": -3,
+      "gap": -4
+    },
+    {
+      "seq_a": "TGCCAATTACCCAGCTTGTCCCAAGCCCTCCCCGATCGGGACCGGGGAGGAAA",
+      "seq_b": "TCTCGAACACTCTTGGACGAGTACTGAAGAATTACTAATCTACGAGTAAACTCG",
+      "match": 2,
+      "mismatch": -10,
+      "gap": -10
+    },
+    {
+      "seq_a": "GAGACTGTAAGACTTTGTTGGCTAGAAATGCATAAATCCGGACTCGGTCT",
+      "seq_b": "TTAACTGGACCGGGGTTTTACCGATTTAACCGGTTCTCAGGGGCCGAATAA",
+      "match": 6,
+      "mismatch": -4,
+      "gap": -10
+    },
+    {
+      "seq_a": "ATCCCCCTGGAAGGTCTGTGGATGCAGTCACGTTTTGGGGGGTTTAGGGA",
+      "seq_b": "GCGTTCCCGTAAGTTCTCGTCGTTCACATAGCGGGTCTAAGAAGAGTCCGT",
+      "match": 2,
+      "mismatch": -8,
+      "gap": -8
+    },
+    {
+      "seq_a": "ACTAACAAAGCCACCCTCTAGACGCAGAGGGGATTTATCCTTCCCAAAAA",
+      "seq_b": "TCAACCGTTAATTATGCACGGACTAATATTGGCAATGCCTGTCAGCCAATCGT",
+      "match": 5,
+      "mismatch": -3,
+      "gap": -1
+    },
+    {
+      "seq_a": "TAGTCACGCATGCCGACGCCTTGCTCACGCTCGCTCGCGCTAGAAGTTTGCGGT",
+      "seq_b": "AGGGACAGGGCGCGACACGAGCCGCACCAAAGAACTTCCTAACTTCGTGT",
+      "match": 8,
+      "mismatch": -1,
+      "gap": -7
+    },
+    {
+      "seq_a": "TAATTGAATCCGGGATTCTGCACGGACCGTCCTACCAATCGTACGGTCGGAGCG",
+      "seq_b": "CACACATTGTTAAACCACCGTAGTACTGCCAGTGACCTACCGAATGGACTG",
+      "match": 7,
+      "mismatch": -2,
+      "gap": -7
+    },
+    {
+      "seq_a": "AGATCTGATCGACTTAAATAGAGGTGGAGCCGAAGCACACCGTTTTTGGGG",
+      "seq_b": "CCGTTTTATGAGTCCCGCTATTACGTTACCCCATGCGAGGGGGCTCGGCACA",
+      "match": 5,
+      "mismatch": -5,
+      "gap": -5
+    },
+    {
+      "seq_a": "CGCATGTACCGTGTTCAGCTCAGCGCCTATACATACCGCTCCTTAGATCATGA",
+      "seq_b": "CGGTCTGGCAGCTGCCTGCAGTCCGCACAAGGGTCTAGTCAGATCACTCCC",
+      "match": 10,
+      "mismatch": -3,
+      "gap": -2
+    },
+    {
+      "seq_a": "AGAATTCACGCCGGATTACCCTCAATTTAAATCCGGTCATAACTAAGCTATC",
+      "seq_b": "CTATGCGAACGAGTCTCTTGCTGTAGAGTGTTGGAGTGGGTGGCCATAGGGCG",
+      "match": 8,
+      "mismatch": -4,
+      "gap": -2
+    }
+  ]
