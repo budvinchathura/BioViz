@@ -1,19 +1,22 @@
+"""
+Test classes for testing alignment game
+"""
 import unittest
 import json
 from Bio import Align
 
-from PairAlign.Algorithms.SW import SW
+from PairAlign.Algorithms.NW import NW
 
 
 # python -m coverage run Tests/test_pairalign.py
 # python -m unittest discover -s Tests
 
-DATA_FILE_NAME = 'test/SW/data.json'
+DATA_FILE_NAME = 'test/BasicPairAlign/data.json'
 
 
-class SWTest(unittest.TestCase):
+class NWTest(unittest.TestCase):
     """
-    Class for testing SW algorithm
+    Class for testing NW algorithm
     """
 
     def setUp(self):
@@ -29,7 +32,7 @@ class SWTest(unittest.TestCase):
         """
 
         for item in self.data:
-            algo = SW(item['seq_a'], item['seq_b'],
+            algo = NW(item['seq_a'], item['seq_b'],
                       item['match'], item['mismatch'], item['gap'])
             algo.initialize()
             algo.calculate_score()
@@ -39,7 +42,7 @@ class SWTest(unittest.TestCase):
             score = algo.get_score()
 
             aligner = Align.PairwiseAligner()
-            aligner.mode = 'local'
+            aligner.mode = 'global'
             aligner.match_score = item['match']
             aligner.mismatch_score = item['mismatch']
             aligner.gap_score = item['gap']
@@ -53,5 +56,6 @@ class SWTest(unittest.TestCase):
 
             # self.assertIn([alignments['algn_a'], alignments['algn_b']], ref_alignments)
 
-            self.assertEqual(score, ref_score)
+            self.assertEqual(score, ref_score,item)
+        
             

@@ -68,7 +68,7 @@ class SW(Algorithm):
                     self.max_i = [i]
                     self.max_j = [j]
                     self.max_score = max_value
-                elif max_value == self.max_score  and self.match_score != 0:
+                elif max_value == self.max_score  and self.max_score != 0:
                     self.max_i.append(i)
                     self.max_j.append(j)
 

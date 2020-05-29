@@ -1,22 +1,20 @@
 import unittest
 import json
-from Bio import Align
-from Bio.Align import substitution_matrices
 from Bio import pairwise2
 from Bio.SubsMat import MatrixInfo as matlist
 
-from PairAlign.Algorithms.NW_extended import NWExtended
+from PairAlign.Algorithms.SW_extended import SWExtended
 
 
 # python -m coverage run Tests/test_pairalign.py
-# python -m unittest discover -s test/NW_Extended
+# python -m unittest discover -s test/SW_Extended
 
-DATA_FILE_NAME = 'test/NW_Extended/data.json'
+DATA_FILE_NAME = 'test/ExtendedPairAlign/data.json'
 
 
-class NWTest(unittest.TestCase):
+class SWTest(unittest.TestCase):
     """
-    Class for testing NWExtended algorithm
+    Class for testing SWExtended algorithm
     """
 
     def setUp(self):
@@ -32,7 +30,7 @@ class NWTest(unittest.TestCase):
         """
 
         for item in self.data:
-            algo = NWExtended(item['seq_type'],item['sub_mat'], item['seq_a'], item['seq_b'],
+            algo = SWExtended(item['seq_type'],item['sub_mat'], item['seq_a'], item['seq_b'],
                       item['match'], item['mismatch'], item['opening_gap'], item['extending_gap'], item['priority'])
             algo.initialize()
             algo.calculate_score()
@@ -42,7 +40,7 @@ class NWTest(unittest.TestCase):
             score = algo.get_score()
 
             # aligner = Align.PairwiseAligner()
-            # aligner.mode = 'global'
+            # aligner.mode = 'local'
             # aligner.match_score = int(item['match'])
             # aligner.mismatch_score = int(item['mismatch'])
             # aligner.open_gap_score = int(item['opening_gap'])
@@ -58,7 +56,7 @@ class NWTest(unittest.TestCase):
             opening_gap = int(item['opening_gap'])
             extending_gap = int(item['extending_gap'])
             if(item['sub_mat'] == 'DEFAULT'):
-                ref_score = pairwise2.align.globalms(item['seq_a'], item['seq_b'], match, mismatch, opening_gap, extending_gap, score_only=True, penalize_end_gaps=(True, True))
+                ref_score = pairwise2.align.localmd(item['seq_a'].upper(), item['seq_b'].upper(), match, mismatch, opening_gap, extending_gap,opening_gap, extending_gap, score_only=True)
             else:
                 # subs_mat = matlist.blosum90
                 if (item['sub_mat'] == 'BLOSUM90'):
@@ -74,19 +72,13 @@ class NWTest(unittest.TestCase):
                 elif (item['sub_mat'] == 'BLOSUM30'):
                     subs_mat = matlist.blosum30
 
-                ref_score = pairwise2.align.globaldx(item['seq_a'], item['seq_b'], subs_mat, score_only=True,penalize_end_gaps=(True, True))
-            # ref_alignments = []
-
-            # for align in ref_result:
-            #     temp = str(align.format()).split('\n')
-            #     ref_alignments.append([temp[0], temp[2]])
-
-            # self.assertIn([alignments['algn_a'], alignments['algn_b']], ref_alignments)
-
+                ref_score = pairwise2.align.localdd(item['seq_a'].upper(), item['seq_b'].upper(), subs_mat,opening_gap, extending_gap,opening_gap, extending_gap, score_only=True)
+            
             # self.assertEqual(score, ref_score)
+            print(item['sub_mat'],end='')
             try:
-                self.assertGreaterEqual(score, ref_score)
-                print('Pass')
+                self.assertEqual(score, ref_score)
+                print('Pass sw extended')
             except Exception as e:
                 print(e)
             

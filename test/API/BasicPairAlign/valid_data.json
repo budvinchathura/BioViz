@@ -1,0 +1,30 @@
+[
+    {
+      "seq_a": "GAATATCGGCGTTTGCGGCCTGCATTGAGTGCAGCGTATGTTAGCTGCTTCAT",
+      "seq_b": "TTGGAGAGGAACATTCCCATTTTGCGCGGGTCTCGCTAGCTACTGCAAGAT",
+      "match": 1,
+      "mismatch": -8,
+      "gap": -2
+    },
+    {
+      "seq_a": "CGGTAAATTTATGAAGCGTTTCGGCCGCAACGCCACGGTATAGGGCGACCAAA",
+      "seq_b": "TAGGAGTACCTACGCTACGAGATTAATTCCGCTAGTCTGAGGCGAACGGACTCG",
+      "match": 9.09,
+      "mismatch": -4,
+      "gap": -4
+    },
+    {
+      "seq_a": "JHGcugvUYoyVOIyvIViV",
+      "seq_b": "ihIVoiYVyvOUTctrCTUcoucoy",
+      "match": 5,
+      "mismatch": -9,
+      "gap": -4
+    },
+    {
+      "seq_a": "agctacgacatcagactacagcatcagactacgactacgactcagcat",
+      "seq_b": "CCGGAAAAATTCTTGCGCACAGGTACAAATGTCACGAGTTTAGGGCCATGGAC",
+      "match": 1,
+      "mismatch": -1,
+      "gap": -3
+    }
+  ]

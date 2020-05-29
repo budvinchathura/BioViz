@@ -1,0 +1,45 @@
+[
+    {
+      "seq_a": "43trgrbh",
+      "seq_b": "433",
+      "match": 1,
+      "mismatch": -8,
+      "gap": -2
+    },
+    {
+      "seq_a": "4444",
+      "seq_b": "TAGGAGTACCTACGCTACGAGATTAATTCCGCTAGTCTGAGGCGAACGGACTCG",
+      "match": 9.09,
+      "mismatch": -4,
+      "gap": -4
+    },
+    {
+      "seq_a": "TTCGCTTAGGGTTTGATCCATCTACTGCTTCCTAATGATTGCGTCGCATTGT",
+      "seq_b": "CACGGCATACTAACGCCAGAGTCGGTTTCCTCCAACTATCTGTAGTCGGTG",
+      "match": "i7b9",
+      "mismatch": -9,
+      "gap": -4
+    },
+    {
+      "seq_a": "ACCACTTGGTTCCAGCTGCTGGTCGGAAACTGGTACTAACCAGTGGTCGCCATT",
+      "seq_b": "CCGGAAAAATTCTTGCGCACAGGTACAAATGTCACGAGTTTAGGGCCATGGAC",
+      "match": 1,
+      "mismatch": "--1",
+      "gap": -3
+    },
+    {
+        "seq_a": "GCATCGCTACGCT",
+        "seq_b": "AGCTACGCJACUATCLOIAYF",
+        "match": 1,
+        "mismatch": "-1",
+        "gap": -3,
+        "something":1
+    },
+    {
+        "seq_a": "IUGBPOU\niugouefoue",
+        "seq_b": "CCGGAAAAATTCTTGCGCACAGGTACAAATGTCACGAGTTTAGGGCCATGGAC",
+        "match": 1,
+        "mismatch": "-1",
+        "gap": -3
+    }
+  ]

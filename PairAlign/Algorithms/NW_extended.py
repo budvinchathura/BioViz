@@ -71,7 +71,7 @@ class NWExtended(Algorithm):
             return int(self.sub_mat[char1+char2])
         elif self.seq_type == 'PROTEIN':
             char1, char2 = (self.seq_a[a_i].upper(), self.seq_b[b_i].upper()) if (
-                self.seq_a[a_i], self.seq_b[b_i]) in self.sub_mat else \
+                self.seq_a[a_i].upper(), self.seq_b[b_i].upper()) in self.sub_mat else \
                 (self.seq_b[b_i].upper(), self.seq_a[a_i].upper())
             return self.sub_mat[(char1, char2)]
 

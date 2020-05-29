@@ -46,7 +46,7 @@ class SWExtended(Algorithm):
             (self.len_a + 1, self.len_b + 1), dtype=object)
 
     def initialize(self):
-        
+
         for i in range(1, self.len_a + 1):
             self.score_mat[i][0][0] = 0
             self.direction_mat[i][0] = [[0], [0], [0]]
@@ -66,11 +66,12 @@ class SWExtended(Algorithm):
 
         if self.seq_type == 'DNA':
             char1, char2 = (self.seq_a[a_i].upper(), self.seq_b[b_i].upper()) \
-                if (self.seq_a[a_i] > self.seq_b[b_i]) else (self.seq_b[b_i].upper(), self.seq_a[a_i].upper())
+                if (self.seq_a[a_i] > self.seq_b[b_i]) else \
+                (self.seq_b[b_i].upper(), self.seq_a[a_i].upper())
             return int(self.sub_mat[char1+char2])
         if self.seq_type == 'PROTEIN':
             char1, char2 = (self.seq_a[a_i].upper(), self.seq_b[b_i].upper()) \
-                if (self.seq_a[a_i], self.seq_b[b_i]) in self.sub_mat \
+                if (self.seq_a[a_i].upper(), self.seq_b[b_i].upper()) in self.sub_mat \
                 else (self.seq_b[b_i].upper(), self.seq_a[a_i].upper())
             return self.sub_mat[(char1, char2)]
 
@@ -98,7 +99,7 @@ class SWExtended(Algorithm):
                 insertion_1 = max_2
                 insertion_2 = max_3
 
-                max_1 = max(match, insertion_1, insertion_2, 0) 
+                max_1 = max(match, insertion_1, insertion_2, 0)
 
                 max_value = ['-inf' if max_1 == -np.inf else max_1,
                              '-inf' if max_2 == -np.inf else max_2,
@@ -127,11 +128,12 @@ class SWExtended(Algorithm):
                     self.direction_mat[i][j][2].append((2, self.LEFT))
                 if max_value[0] == 0:
                     self.direction_mat[i][j][0].append(0)
-                if max_value[0] != '-inf' and max_value[0] > self.max_score: ##check
+                if max_value[0] != '-inf' and max_value[0] > self.max_score:  # check
                     self.max_i = [i]
                     self.max_j = [j]
                     self.max_score = max_value[0]
-                elif max_value[0] != '-inf' and max_value[0] == self.max_score and self.match_score != 0: ##check
+                elif max_value[0] != '-inf' and max_value[0] == self.max_score \
+                        and self.max_score != 0:  # check
                     self.max_i.append(i)
                     self.max_j.append(j)
 
@@ -245,8 +247,10 @@ class SWExtended(Algorithm):
             iden = 0
             length = len(self.algn_a[k])
             for i in range(length):
-                ch_1 = self.algn_a[k][i].upper() if self.algn_a[k][i] != '-' else '-'
-                ch_2 = self.algn_b[k][i].upper() if self.algn_b[k][i] != '-' else '-'
+                ch_1 = self.algn_a[k][i].upper(
+                ) if self.algn_a[k][i] != '-' else '-'
+                ch_2 = self.algn_b[k][i].upper(
+                ) if self.algn_b[k][i] != '-' else '-'
                 if ch_1 == ch_2:
                     sym += ch_1
                     iden += 1
