@@ -18,7 +18,7 @@
         "match": 4,
         "mismatch": 8,
         "opening_gap": "-3",
-        "extending_gap": 2,
+        "extending_gap": -2,
         "priority": "LOWROAD"
     },
     {
@@ -28,8 +28,8 @@
         "seq_b": "TGCCAATTACCCAGCTTGTCCCAAGCCCTCCCATGATCGGCGCCCGCGGAGGAAA",
         "match": 4,
         "mismatch": "-2",
-        "opening_gap": 1,
-        "extending_gap": 8,
+        "opening_gap": -10,
+        "extending_gap": -8,
         "priority": "LOWROAD"
     },
     {
@@ -39,8 +39,8 @@
         "seq_b": "GATCCGAAGGCGATGACATTCGTCTTCGCTCATGCACGTGGTCTTCTCTAGGACCG",
         "match": 3,
         "mismatch": "-8",
-        "opening_gap": 2,
-        "extending_gap": 1,
+        "opening_gap": -2,
+        "extending_gap": -1,
         "priority": "LOWROAD"
     },
     {
@@ -51,7 +51,7 @@
         "match": 2,
         "mismatch": -10,
         "opening_gap": "-8",
-        "extending_gap": 10,
+        "extending_gap": -5,
         "priority": "LOWROAD"
     },
     {
@@ -73,7 +73,7 @@
         "match": 1,
         "mismatch": "-4",
         "opening_gap": "-10",
-        "extending_gap": 3,
+        "extending_gap": -3,
         "priority": "HIGHROAD"
     },
     {
@@ -83,7 +83,7 @@
         "seq_b": "CGGTAAATTTATATAAGCGTCGCCGGCGGCAACGCCACGGTATAGGGCGACCAAA",
         "match": 4,
         "mismatch": -2,
-        "opening_gap": -1,
+        "opening_gap": -3,
         "extending_gap": "-2",
         "priority": "LOWROAD"
     },

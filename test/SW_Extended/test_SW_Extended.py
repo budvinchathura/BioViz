@@ -2,6 +2,8 @@ import unittest
 import json
 from Bio import Align
 from Bio.Align import substitution_matrices
+from Bio import pairwise2
+from Bio.SubsMat import MatrixInfo as matlist
 
 from PairAlign.Algorithms.SW_extended import SWExtended
 
@@ -39,18 +41,45 @@ class SWTest(unittest.TestCase):
             # alignments = algo.get_alignments()[0]
             score = algo.get_score()
 
-            aligner = Align.PairwiseAligner()
-            aligner.mode = 'local'
-            aligner.match_score = int(item['match'])
-            aligner.mismatch_score = int(item['mismatch'])
-            aligner.open_gap_score = int(item['opening_gap'])
-            aligner.extend_gap_score = int(item['extending_gap'])
-            if(item['sub_mat'] != 'DEFAULT'):
-                aligner.substitution_matrix = substitution_matrices.load(item['sub_mat'])
-            ref_result = aligner.align(item['seq_a'], item['seq_b'])
+            # aligner = Align.PairwiseAligner()
+            # aligner.mode = 'local'
+            # aligner.match_score = int(item['match'])
+            # aligner.mismatch_score = int(item['mismatch'])
+            # aligner.open_gap_score = int(item['opening_gap'])
+            # aligner.extend_gap_score = int(item['extending_gap'])
+            # if(item['sub_mat'] != 'DEFAULT'):
+            #     aligner.substitution_matrix = substitution_matrices.load(item['sub_mat'])
+            # ref_result = aligner.align(item['seq_a'], item['seq_b'])
 
-            ref_score = ref_result.score
+            # ref_score = ref_result.score
+
+            match = int(item['match'])
+            mismatch = int(item['mismatch'])
+            opening_gap = int(item['opening_gap'])
+            extending_gap = int(item['extending_gap'])
+            if(item['sub_mat'] == 'DEFAULT'):
+                ref_score = pairwise2.align.localms(item['seq_a'], item['seq_b'], match, mismatch, opening_gap, extending_gap, score_only=True, penalize_end_gaps=(True, True))
+            else:
+                # subs_mat = matlist.blosum90
+                if (item['sub_mat'] == 'BLOSUM90'):
+                    subs_mat = matlist.blosum90
+                elif (item['sub_mat'] == 'BLOSUM62'):
+                    subs_mat = matlist.blosum62
+                elif (item['sub_mat'] == 'BLOSUM60'):
+                    subs_mat = matlist.blosum60
+                elif (item['sub_mat'] == 'BLOSUM50'):
+                    subs_mat = matlist.blosum50
+                elif (item['sub_mat'] == 'BLOSUM45'):
+                    subs_mat = matlist.blosum45
+                elif (item['sub_mat'] == 'BLOSUM30'):
+                    subs_mat = matlist.blosum30
+
+                ref_score = pairwise2.align.localdx(item['seq_a'], item['seq_b'], subs_mat, score_only=True,penalize_end_gaps=(True, True))
             
             # self.assertEqual(score, ref_score)
-            self.assertGreaterEqual(score, ref_score)
+            try:
+                self.assertGreaterEqual(score, ref_score)
+                print('Pass')
+            except Exception as e:
+                print(e)
             
