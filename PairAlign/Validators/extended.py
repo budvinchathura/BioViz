@@ -21,7 +21,8 @@ extendedSchema = {
                 "dependencies": {"seq_type":["DNA"]}
             },
             {
-                "allowed": ["BLOSUM30", "BLOSUM45", "BLOSUM50", "BLOSUM60", "BLOSUM90"],
+                # "allowed": ["BLOSUM30", "BLOSUM45", "BLOSUM50", "BLOSUM60", "BLOSUM90"],
+                "allowed": ["BLOSUM45", "BLOSUM50", "BLOSUM62", "BLOSUM90"],
                 "dependencies": {"seq_type":["PROTEIN"]}
             },
             {
