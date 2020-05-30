@@ -11,8 +11,8 @@ SCHEMA = {'seq_a': {'type': 'string'},
           }
 
 basicSchema = {
-    "seq_a": {"required":True, "type":"string", "minlength":1, "maxlength":100, "nullable":False, "regex":"^[a-zA-Z]+$"},
-    "seq_b": {"required":True, "type":"string", "minlength":1, "maxlength":100, "nullable":False, "regex":"^[a-zA-Z]+$"},
+    "seq_a": {"required":True, "type":"string", "minlength":1, "maxlength":1000, "nullable":False, "regex":"^[a-zA-Z]+$"},
+    "seq_b": {"required":True, "type":"string", "minlength":1, "maxlength":1000, "nullable":False, "regex":"^[a-zA-Z]+$"},
     "match": {"required":True, "nullable":False, 'type': 'integer', 'coerce': int},
     "mismatch": {"required":True, "nullable":False, 'type': 'integer', 'coerce': int},
     "gap": {"required":True, "nullable":False, 'type': 'integer', 'coerce': int}
