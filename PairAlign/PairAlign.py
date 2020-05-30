@@ -21,8 +21,8 @@ def pair_nw():
     match = int(request_data['match'])
     mismatch = int(request_data['mismatch'])
     gap = int(request_data['gap'])
-    nw_algorithm = NW(request_data['seq_a'][:100],
-                      request_data['seq_b'][:100], match, mismatch, gap)
+    nw_algorithm = NW(request_data['seq_a'][:1000],
+                      request_data['seq_b'][:1000], match, mismatch, gap)
 
     executer = Executer(nw_algorithm)
     result = executer.get_results()
@@ -43,8 +43,8 @@ def pair_sw():
     mismatch = int(request_data['mismatch'])
     gap = int(request_data['gap'])
 
-    sw_algorithm = SW(request_data['seq_a'][:100],
-                      request_data['seq_b'][:100], match, mismatch, gap)
+    sw_algorithm = SW(request_data['seq_a'][:1000],
+                      request_data['seq_b'][:1000], match, mismatch, gap)
 
     executer = Executer(sw_algorithm)
     result = executer.get_results()
@@ -69,8 +69,8 @@ def pair_nw_affine():
     match = int(request_data['match']) if sub_mat == 'DEFAULT' else 0
     mismatch = int(request_data['mismatch']) if sub_mat == 'DEFAULT' else 0
 
-    nw_affine_algorithm = NWExtended(seq_type, sub_mat, request_data['seq_a'][:100],
-                      request_data['seq_b'][:100], match, mismatch, opening_gap, extending_gap, priority)
+    nw_affine_algorithm = NWExtended(seq_type, sub_mat, request_data['seq_a'][:1000],
+                      request_data['seq_b'][:1000], match, mismatch, opening_gap, extending_gap, priority)
 
     executer = Executer(nw_affine_algorithm)
     result = executer.get_results()
@@ -95,8 +95,8 @@ def pair_sw_affine():
     match = int(request_data['match']) if sub_mat == 'DEFAULT' else 0
     mismatch = int(request_data['mismatch']) if sub_mat == 'DEFAULT' else 0
 
-    sw_affine_algorithm = SWExtended(seq_type, sub_mat, request_data['seq_a'][:100],
-                      request_data['seq_b'][:100], match, mismatch, opening_gap, extending_gap, priority)
+    sw_affine_algorithm = SWExtended(seq_type, sub_mat, request_data['seq_a'][:1000],
+                      request_data['seq_b'][:1000], match, mismatch, opening_gap, extending_gap, priority)
 
     executer = Executer(sw_affine_algorithm)
     result = executer.get_results()

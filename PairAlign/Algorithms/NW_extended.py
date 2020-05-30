@@ -67,7 +67,7 @@ class NWExtended(Algorithm):
 
         elif self.seq_type == 'DNA':
             char1, char2 = (self.seq_a[a_i].upper(), self.seq_b[b_i].upper()) if (
-                self.seq_a[a_i] > self.seq_b[b_i]) else (self.seq_b[b_i].upper(), self.seq_a[a_i].upper())
+                self.seq_a[a_i].upper() > self.seq_b[b_i].upper()) else (self.seq_b[b_i].upper(), self.seq_a[a_i].upper())
             return int(self.sub_mat[char1+char2])
         elif self.seq_type == 'PROTEIN':
             char1, char2 = (self.seq_a[a_i].upper(), self.seq_b[b_i].upper()) if (

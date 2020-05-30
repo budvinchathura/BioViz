@@ -75,10 +75,7 @@ class SWTest(unittest.TestCase):
                 ref_score = pairwise2.align.localdd(item['seq_a'].upper(), item['seq_b'].upper(), subs_mat,opening_gap, extending_gap,opening_gap, extending_gap, score_only=True)
             
             # self.assertEqual(score, ref_score)
-            print(item['sub_mat'],end='')
-            try:
-                self.assertEqual(score, ref_score)
-                print('Pass sw extended')
-            except Exception as e:
-                print(e)
+            
+            self.assertEqual(score, ref_score)
+                
             

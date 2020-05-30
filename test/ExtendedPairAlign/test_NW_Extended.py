@@ -83,10 +83,7 @@ class NWTest(unittest.TestCase):
             # self.assertIn([alignments['algn_a'], alignments['algn_b']], ref_alignments)
 
             # self.assertEqual(score, ref_score)
-            print(item['sub_mat'],end='')
-            try:
-                self.assertEqual(score, ref_score)
-                print('Pass nw extended')
-            except Exception as e:
-                print(e)
+            
+            self.assertEqual(score, ref_score)
+                
             
