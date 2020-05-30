@@ -27,10 +27,10 @@ class SWExtended(Algorithm):
                                           and sub_mat != 'DEFAULT') else sub_mat
 
         self.priority = priority
-        self.match_score = match_score
-        self.mismatch_penalty = mismatch_penalty
-        self.opening_gap_penalty = opening_gap_penalty
-        self.extending_gap_penalty = extending_gap_penalty
+        self.match_score = int(match_score)
+        self.mismatch_penalty = int(mismatch_penalty)
+        self.opening_gap_penalty = int(opening_gap_penalty)
+        self.extending_gap_penalty = int(extending_gap_penalty)
         self.algn_a = []
         self.algn_b = []
         self.score = 0
@@ -46,7 +46,6 @@ class SWExtended(Algorithm):
             (self.len_a + 1, self.len_b + 1), dtype=object)
 
     def initialize(self):
-        self.score_mat[0][0] = [0, 0, 0]
 
         for i in range(1, self.len_a + 1):
             self.score_mat[i][0][0] = 0
@@ -56,6 +55,7 @@ class SWExtended(Algorithm):
             self.score_mat[0][j][0] = 0
             self.direction_mat[0][j] = [[0], [0], [0]]
 
+        self.score_mat[0][0] = [0, 0, 0]
         self.direction_mat[0][0] = [[0], [0], [0]]
 
     def __similarity(self, a_i, b_i):
@@ -66,11 +66,12 @@ class SWExtended(Algorithm):
 
         if self.seq_type == 'DNA':
             char1, char2 = (self.seq_a[a_i].upper(), self.seq_b[b_i].upper()) \
-                if (self.seq_a[a_i] > self.seq_b[b_i]) else (self.seq_b[b_i].upper(), self.seq_a[a_i].upper())
+                if (self.seq_a[a_i].upper() > self.seq_b[b_i].upper()) else \
+                (self.seq_b[b_i].upper(), self.seq_a[a_i].upper())
             return int(self.sub_mat[char1+char2])
         if self.seq_type == 'PROTEIN':
             char1, char2 = (self.seq_a[a_i].upper(), self.seq_b[b_i].upper()) \
-                if (self.seq_a[a_i], self.seq_b[b_i]) in self.sub_mat \
+                if (self.seq_a[a_i].upper(), self.seq_b[b_i].upper()) in self.sub_mat \
                 else (self.seq_b[b_i].upper(), self.seq_a[a_i].upper())
             return self.sub_mat[(char1, char2)]
 
@@ -79,12 +80,6 @@ class SWExtended(Algorithm):
     def calculate_score(self):
         for i in range(1, self.len_a + 1):
             for j in range(1, self.len_b + 1):
-                match = -np.inf if self.score_mat[i-1][j-1][0] == '-inf' \
-                    else self.score_mat[i-1][j-1][0] + self.__similarity(i-1, j-1)
-                insertion_1 = -np.inf if self.score_mat[i-1][j-1][1] == '-inf' \
-                    else self.score_mat[i-1][j-1][1] + self.__similarity(i-1, j-1)
-                insertion_2 = -np.inf if self.score_mat[i-1][j-1][2] == '-inf' \
-                    else self.score_mat[i-1][j-1][2] + self.__similarity(i-1, j-1)
 
                 open_gap_1 = -np.inf if self.score_mat[i-1][j][0] == '-inf' \
                     else self.score_mat[i-1][j][0] + self.opening_gap_penalty
@@ -96,9 +91,15 @@ class SWExtended(Algorithm):
                 extend_gap_2 = -np.inf if self.score_mat[i][j-1][2] == '-inf' \
                     else self.score_mat[i][j-1][2] + self.extending_gap_penalty
 
-                max_1 = max(match, insertion_1, insertion_2, 0)
                 max_2 = max(open_gap_1, extend_gap_1)
                 max_3 = max(open_gap_2, extend_gap_2)
+
+                match = -np.inf if self.score_mat[i-1][j-1][0] == '-inf' \
+                    else self.score_mat[i-1][j-1][0] + self.__similarity(i-1, j-1)
+                insertion_1 = max_2
+                insertion_2 = max_3
+
+                max_1 = max(match, insertion_1, insertion_2, 0)
 
                 max_value = ['-inf' if max_1 == -np.inf else max_1,
                              '-inf' if max_2 == -np.inf else max_2,
@@ -106,27 +107,33 @@ class SWExtended(Algorithm):
 
                 self.score_mat[i][j] = max_value
                 self.direction_mat[i][j] = [[], [], []]
+
                 if max_value[0] == match:
                     self.direction_mat[i][j][0].append((0, self.DIAGONAL))
-                if max_value[0] == insertion_1 and max_value[0] != -np.inf:
-                    self.direction_mat[i][j][0].append((1, self.DIAGONAL))
-                if max_value[0] == insertion_2 and max_value[0] != -np.inf:
-                    self.direction_mat[i][j][0].append((2, self.DIAGONAL))
-                if max_value[1] == open_gap_1 and max_value[1] != -np.inf:
+                if max_value[0] == open_gap_1:
+                    self.direction_mat[i][j][0].append((0, self.UP))
+                if max_value[0] == extend_gap_1:
+                    self.direction_mat[i][j][0].append((1, self.UP))
+                if max_value[0] == open_gap_2:
+                    self.direction_mat[i][j][0].append((0, self.LEFT))
+                if max_value[0] == extend_gap_2:
+                    self.direction_mat[i][j][0].append((2, self.LEFT))
+                if max_value[1] == open_gap_1:
                     self.direction_mat[i][j][1].append((0, self.UP))
-                if max_value[1] == extend_gap_1 and max_value[1] != -np.inf:
+                if max_value[1] == extend_gap_1:
                     self.direction_mat[i][j][1].append((1, self.UP))
-                if max_value[2] == open_gap_2 and max_value[2] != -np.inf:
+                if max_value[2] == open_gap_2:
                     self.direction_mat[i][j][2].append((0, self.LEFT))
-                if max_value[2] == extend_gap_2 and max_value[2] != -np.inf:
+                if max_value[2] == extend_gap_2:
                     self.direction_mat[i][j][2].append((2, self.LEFT))
                 if max_value[0] == 0:
                     self.direction_mat[i][j][0].append(0)
-                if max_value[0] > self.max_score:
+                if max_value[0] != '-inf' and max_value[0] > self.max_score:  # check
                     self.max_i = [i]
                     self.max_j = [j]
                     self.max_score = max_value[0]
-                elif max_value[0] == self.max_score and self.match_score != 0:
+                elif max_value[0] != '-inf' and max_value[0] == self.max_score \
+                        and self.max_score != 0:  # check
                     self.max_i.append(i)
                     self.max_j.append(j)
 
@@ -240,8 +247,10 @@ class SWExtended(Algorithm):
             iden = 0
             length = len(self.algn_a[k])
             for i in range(length):
-                ch_1 = self.algn_a[k][i].upper() if self.algn_a[k][i] != '-' else '-'
-                ch_2 = self.algn_b[k][i].upper() if self.algn_b[k][i] != '-' else '-'
+                ch_1 = self.algn_a[k][i].upper(
+                ) if self.algn_a[k][i] != '-' else '-'
+                ch_2 = self.algn_b[k][i].upper(
+                ) if self.algn_b[k][i] != '-' else '-'
                 if ch_1 == ch_2:
                     sym += ch_1
                     iden += 1

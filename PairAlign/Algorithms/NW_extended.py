@@ -27,10 +27,10 @@ class NWExtended(Algorithm):
                                           and sub_mat != 'DEFAULT') else sub_mat
 
         self.priority = priority
-        self.match_score = match_score
-        self.mismatch_penalty = mismatch_penalty
-        self.opening_gap_penalty = opening_gap_penalty
-        self.extending_gap_penalty = extending_gap_penalty
+        self.match_score = int(match_score)
+        self.mismatch_penalty = int(mismatch_penalty)
+        self.opening_gap_penalty = int(opening_gap_penalty)
+        self.extending_gap_penalty = int(extending_gap_penalty)
         self.algn_a = ''
         self.algn_b = ''
         self.score = 0
@@ -43,18 +43,18 @@ class NWExtended(Algorithm):
             (self.len_a + 1, self.len_b + 1), dtype=object)
 
     def initialize(self):
-        self.score_mat[0][0][0] = 0
-
+        
         for i in range(self.len_a+1):
-            self.score_mat[i][0][1] = self.opening_gap_penalty + \
-                self.extending_gap_penalty*i
-            self.direction_mat[i][0] = [[], [(1, self.UP)], []]
+            self.score_mat[i][0][0] = self.opening_gap_penalty + \
+                self.extending_gap_penalty*(i-1)
+            self.direction_mat[i][0] = [[(0, self.UP)], [], []]
 
         for j in range(self.len_b+1):
-            self.score_mat[0][j][2] = self.opening_gap_penalty + \
-                self.extending_gap_penalty*j
-            self.direction_mat[0][j] = [[], [], [(2, self.LEFT)]]
+            self.score_mat[0][j][0] = self.opening_gap_penalty + \
+                self.extending_gap_penalty*(j-1)
+            self.direction_mat[0][j] = [[(0, self.LEFT)], [], []]
 
+        self.score_mat[0][0][0] = 0
         self.direction_mat[0][0] = [[0], [0], [0]]
 
     def __similarity(self, a_i, b_i):
@@ -67,45 +67,37 @@ class NWExtended(Algorithm):
 
         elif self.seq_type == 'DNA':
             char1, char2 = (self.seq_a[a_i].upper(), self.seq_b[b_i].upper()) if (
-                self.seq_a[a_i] > self.seq_b[b_i]) else (self.seq_b[b_i].upper(), self.seq_a[a_i].upper())
+                self.seq_a[a_i].upper() > self.seq_b[b_i].upper()) else (self.seq_b[b_i].upper(), self.seq_a[a_i].upper())
             return int(self.sub_mat[char1+char2])
         elif self.seq_type == 'PROTEIN':
             char1, char2 = (self.seq_a[a_i].upper(), self.seq_b[b_i].upper()) if (
-                self.seq_a[a_i], self.seq_b[b_i]) in self.sub_mat else \
+                self.seq_a[a_i].upper(), self.seq_b[b_i].upper()) in self.sub_mat else \
                 (self.seq_b[b_i].upper(), self.seq_a[a_i].upper())
             return self.sub_mat[(char1, char2)]
 
     def calculate_score(self):
         for i in range(1, self.len_a + 1):
             for j in range(1, self.len_b + 1):
-                match = - \
-                    np.inf if self.score_mat[i-1][j-1][0] == '-inf' else \
-                    self.score_mat[i-1][j-1][0] + self.__similarity(i-1, j-1)
-                insertion_1 = - \
-                    np.inf if self.score_mat[i-1][j-1][1] == '-inf' else \
-                    self.score_mat[i-1][j-1][1] + self.__similarity(i-1, j-1)
-                insertion_2 = - \
-                    np.inf if self.score_mat[i-1][j-1][2] == '-inf' else \
-                    self.score_mat[i-1][j-1][2] + self.__similarity(i-1, j-1)
 
-                open_gap_1 = - \
-                    np.inf if self.score_mat[i-1][j][0] == '-inf' else \
-                    self.score_mat[i-1][j][0] + self.opening_gap_penalty
+                open_gap_1 = self.score_mat[i-1][j][0] + self.opening_gap_penalty
                 extend_gap_1 = - \
                     np.inf if self.score_mat[i-1][j][1] == '-inf' else \
                     self.score_mat[i-1][j][1] + self.extending_gap_penalty
 
-                open_gap_2 = - \
-                    np.inf if self.score_mat[i][j-1][0] == '-inf' else \
-                    self.score_mat[i][j-1][0] + self.opening_gap_penalty
+                open_gap_2 = self.score_mat[i][j-1][0] + self.opening_gap_penalty
                 extend_gap_2 = - \
                     np.inf if self.score_mat[i][j-1][2] == '-inf' else \
                     self.score_mat[i][j-1][2] + self.extending_gap_penalty
 
-                max_1 = max(match, insertion_1, insertion_2)
                 max_2 = max(open_gap_1, extend_gap_1)
                 max_3 = max(open_gap_2, extend_gap_2)
 
+                match = self.score_mat[i-1][j-1][0] + self.__similarity(i-1, j-1)
+                insertion_1 = max_2
+                insertion_2 = max_3
+
+                max_1 = max(match, insertion_1, insertion_2)
+                
                 max_value = ['-inf' if max_1 == -np.inf else max_1, '-inf' if max_2 == -
                              np.inf else max_2, '-inf' if max_3 == -np.inf else max_3]
 
@@ -114,10 +106,14 @@ class NWExtended(Algorithm):
 
                 if max_value[0] == match:
                     self.direction_mat[i][j][0].append((0, self.DIAGONAL))
-                if max_value[0] == insertion_1:
-                    self.direction_mat[i][j][0].append((1, self.DIAGONAL))
-                if max_value[0] == insertion_2:
-                    self.direction_mat[i][j][0].append((2, self.DIAGONAL))
+                if max_value[0] == open_gap_1:
+                    self.direction_mat[i][j][0].append((0, self.UP))
+                if max_value[0] == extend_gap_1:
+                    self.direction_mat[i][j][0].append((1, self.UP))
+                if max_value[0] == open_gap_2:
+                    self.direction_mat[i][j][0].append((0, self.LEFT))
+                if max_value[0] == extend_gap_2:
+                    self.direction_mat[i][j][0].append((2, self.LEFT))
                 if max_value[1] == open_gap_1:
                     self.direction_mat[i][j][1].append((0, self.UP))
                 if max_value[1] == extend_gap_1:
@@ -130,9 +126,11 @@ class NWExtended(Algorithm):
         self.score = max(self.score_mat[self.len_a][self.len_b])
 
     def traceback(self):
+        
         i = self.len_a
         j = self.len_b
         k = self.score_mat[self.len_a][self.len_b].tolist().index(self.score)
+        
         end = False
         if self.priority == 'HIGHROAD':
             while True:
@@ -183,6 +181,7 @@ class NWExtended(Algorithm):
         elif self.priority == 'LOWROAD':
             while True:
                 self.traceback_path.append([i, j, k])
+                # print([i, j, k])
 
                 if(j >= 0 and (2, self.LEFT) in self.direction_mat[i][j][k]):
                     self.algn_a = '-'+self.algn_a
