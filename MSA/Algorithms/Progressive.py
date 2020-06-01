@@ -8,10 +8,14 @@ class Progressive(Algorithm):
     Class which implements user defined progressive, multiple sequence alignment algorithm
     """
 
-    def __init__(self, sequences, order, match_score=1, mismatch_penalty=-1, gap_penalty=-1):
+    def __init__(self,seq_type, sub_mat, sequences, order, match_score=1, mismatch_penalty=-1, gap_penalty=-1):
         self.sequences = sequences
         self.order = order
         self.len_seq = len(sequences)
+
+        self.seq_type = seq_type
+        self.sub_mat = sub_mat
+
         self.match_score = match_score
         self.mismatch_penalty = mismatch_penalty
         self.gap_penalty = gap_penalty
@@ -45,7 +49,7 @@ class Progressive(Algorithm):
             else:
                 children.append(temp_prof_data[seq_id2])
 
-            nw_prof_algorithm = NWProf(
+            nw_prof_algorithm = NWProf(self.seq_type, self.sub_mat,
                 seq1, seq2, self.match_score, self.mismatch_penalty, self.gap_penalty)
             executer = Executer(nw_prof_algorithm)
             result = executer.get_results()

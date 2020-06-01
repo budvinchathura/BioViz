@@ -20,10 +20,12 @@ def progressive():
     if not status:
         return jsonify(errors), 400
 
-    match = int(request_data['match'])
-    mismatch = int(request_data['mismatch'])
+    seq_type = request_data['seq_type']
+    sub_mat = request_data['sub_mat']
+    match = int(request_data['match']) if sub_mat == 'DEFAULT' else 0
+    mismatch = int(request_data['mismatch']) if sub_mat == 'DEFAULT' else 0
     gap = int(request_data['gap'])
-    progressive_algorithm = Progressive(
+    progressive_algorithm = Progressive(seq_type, sub_mat,
         request_data['sequences'], request_data['order'], match, mismatch, gap)
 
     executer = Executer(progressive_algorithm)
@@ -43,11 +45,12 @@ def progressive_optimal():
     status, errors = validate_msa_progessive_optimal(request_data)
     if not status:
         return jsonify(errors), 400
-
-    match = int(request_data['match'])
-    mismatch = int(request_data['mismatch'])
+    seq_type = request_data['seq_type']
+    sub_mat = request_data['sub_mat']
+    match = int(request_data['match']) if sub_mat == 'DEFAULT' else 0
+    mismatch = int(request_data['mismatch']) if sub_mat == 'DEFAULT' else 0
     gap = int(request_data['gap'])
-    progressive_algorithm = ProgressiveOptimal(
+    progressive_algorithm = ProgressiveOptimal(seq_type, sub_mat,
         request_data['sequences'], match, mismatch, gap)
 
     executer = Executer(progressive_algorithm)
@@ -55,3 +58,4 @@ def progressive_optimal():
 
     resp = {'result': result}
     return jsonify(resp)
+

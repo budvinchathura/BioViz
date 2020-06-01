@@ -1,5 +1,6 @@
 import numpy as np
 
+from PairAlign.Algorithms.SubstitutionMatrix.subsMat import BLOSUM
 
 class NWProf:
     """
@@ -10,7 +11,7 @@ class NWProf:
     DIAGONAL = 2
     UP = 3
 
-    def __init__(self, prof_a, prof_b, match_score=1, mismatch_penalty=-1, gap_penalty=-1):
+    def __init__(self, seq_type, sub_mat, prof_a, prof_b, match_score=1, mismatch_penalty=-1, gap_penalty=-1):
         self.prof_a = prof_a
         self.prof_b = prof_b
 
@@ -18,6 +19,11 @@ class NWProf:
         self.len_b = len(prof_b[0])
         self.len_prof_a = len(prof_a)
         self.len_prof_b = len(prof_b)
+
+        self.seq_type = seq_type
+        self.sub_mat = BLOSUM[sub_mat] if(self.seq_type == 'PROTEIN'
+                                          and sub_mat != 'DEFAULT') else sub_mat
+
         self.match_score = match_score
         self.mismatch_penalty = mismatch_penalty
         self.gap_penalty = gap_penalty
@@ -62,14 +68,37 @@ class NWProf:
 
     def __similarity(self, a_i, b_i):
         score = 0
-        for i in range(self.len_prof_a):
-            for j in range(self.len_prof_b):
-                if self.prof_a[i][a_i] == '-' or self.prof_b[j][b_i] == '-':
-                    score += self.gap_penalty
-                elif self.prof_a[i][a_i].upper() == self.prof_b[j][b_i].upper():
-                    score += self.match_score
-                else:
-                    score += self.mismatch_penalty
+        if self.sub_mat == 'DEFAULT':
+            for i in range(self.len_prof_a):
+                for j in range(self.len_prof_b):
+                    if self.prof_a[i][a_i] == '-' or self.prof_b[j][b_i] == '-':
+                        score += self.gap_penalty
+                    elif self.prof_a[i][a_i].upper() == self.prof_b[j][b_i].upper():
+                        score += self.match_score
+                    else:
+                        score += self.mismatch_penalty
+            
+        elif self.seq_type == 'DNA':
+            for i in range(self.len_prof_a):
+                for j in range(self.len_prof_b):
+                    if self.prof_a[i][a_i] == '-' or self.prof_b[j][b_i] == '-':
+                        score += self.gap_penalty
+                    else:
+                        char1, char2 = (self.prof_a[i][a_i].upper(), self.prof_b[j][b_i].upper()) if (
+                            self.prof_a[i][a_i].upper() > self.prof_b[j][b_i].upper()) else (self.prof_b[j][b_i].upper(), self.prof_a[i][a_i].upper())
+                        score += self.sub_mat[char1+char2]
+                    
+        elif self.seq_type == 'PROTEIN':
+            for i in range(self.len_prof_a):
+                for j in range(self.len_prof_b):
+                    if self.prof_a[i][a_i] == '-' or self.prof_b[j][b_i] == '-':
+                        score += self.gap_penalty
+                    else:
+                        char1, char2 = (self.prof_a[i][a_i].upper(), self.prof_b[j][b_i].upper()) if (
+                            self.prof_a[i][a_i].upper(), self.prof_b[j][b_i].upper()) in self.sub_mat else \
+                            (self.prof_b[j][b_i].upper(), self.prof_a[i][a_i].upper())
+                        score += self.sub_mat[(char1, char2)]
+                    
         return score
 
     def calculate_score(self):
