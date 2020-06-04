@@ -1,7 +1,7 @@
 import numpy as np
 
 from PairAlign.Algorithms.Algorithm import Algorithm
-from PairAlign.Algorithms.SubstitutionMatrix.subsMat import BLOSUM
+from PairAlign.Algorithms.SubstitutionMatrix.substitution_matrices import BLOSUM
 
 
 class SWExtended(Algorithm):

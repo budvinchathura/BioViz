@@ -1,1 +1,1 @@
-from Game.Game import game_bp
+from Game.Game import GAME_BP

@@ -94,7 +94,8 @@ class NW(Algorithm):
         self.traceback_path = []
 
         self.score_mat = np.zeros((self.len_a+1, self.len_b+1))
-        self.direction_mat = np.empty((self.len_a+1, self.len_b+1), dtype=object)
+        self.direction_mat = np.empty(
+            (self.len_a+1, self.len_b+1), dtype=object)
 
     def initialize(self):
         self.direction_mat[0][0] = [0]
@@ -171,9 +172,12 @@ class NW(Algorithm):
         self.identity = iden / l
 
     def get_alignments(self) -> list:
-        return [{'path': self.traceback_path, 'algn_a': self.algn_a, 'algn_b': self.algn_b, 'identity': self.identity}]
+        return [{'path': self.traceback_path,
+                 'algn_a': self.algn_a,
+                 'algn_b': self.algn_b,
+                 'identity': self.identity}]
 
-    def get_score(self)-> int:
+    def get_score(self) -> int:
         return self.score
 
     def get_score_matrix(self) -> list:
@@ -181,4 +185,3 @@ class NW(Algorithm):
 
     def get_direction_matrix(self) -> list:
         return self.direction_mat.tolist()
-    

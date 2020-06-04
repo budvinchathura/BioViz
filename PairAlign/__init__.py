@@ -1,1 +1,1 @@
-from PairAlign.PairAlign import pair_align_bp
+from PairAlign.PairAlign import PAIR_ALIGN_BP
