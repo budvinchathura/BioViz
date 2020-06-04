@@ -1,11 +1,12 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "description": "Interactive Bioinformatics Alignment Algorithms Analyser and Visualizer",
+    "description": "API documentation for BioViz - Interactive Bioinformatics Alignment Algorithms Analyser and Visualizer",
     "version": "1.0.0",
     "title": "BioViz",
     "contact": {
-      "email": "bioviz@abc.com"
+        "name": "SEP Group 8",
+        "email": "chathurae.17@cse.mrt.ac.lk"
     }
   },
   "servers": [
@@ -19,12 +20,20 @@
       "description": "Align a pair of sequence with NW algorithm"
     },
     {
+      "name": "Pair Align - NW with affine",
+      "description": "Align a pair of sequence with NW algorithm with affine gap penalties and custom similarity matrix"
+    },
+    {
       "name": "Pair Align - SW",
       "description": "Align a pair of sequence with SW algorithm"
     },
     {
+      "name": "Pair Align - SW with affine",
+      "description": "Align a pair of sequence with SW algorithm with affine gap penalties and custom similarity matrix"
+    },
+    {
       "name": "Progressive - MSA",
-      "description": "Align multiple sequences with non optimal progressive algorithm"
+      "description": "Align multiple sequences with progressive algorithm for user defined phylogenetic tree"
     },
     {
       "name": "Progressive Optimal - MSA",
@@ -39,7 +48,7 @@
         ],
         "summary": "Returns alignment, score matrix and direction matrix",
         "requestBody": {
-          "description": "Sequence data. Use only DNA sequences",
+          "description": "Sequence data. Use only DNA/Protein sequences",
           "required": true,
           "content": {
             "application/json": {
@@ -172,7 +181,10 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MSAProgressiveRequestPostBody"
+                "oneOf":[
+                    {"$ref": "#/components/schemas/DNA-MSAProgressiveRequestPostBody"},
+                    {"$ref": "#/components/schemas/Protein-MSAProgressiveRequestPostBody"}
+                ]
               }
             }
           }
@@ -202,7 +214,10 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MSAProgressiveOptimalRequestPostBody"
+                "oneOf":[
+                    {"$ref": "#/components/schemas/DNA-MSAProgressiveOptimalRequestPostBody"},
+                    {"$ref": "#/components/schemas/Protein-MSAProgressiveOptimalRequestPostBody"}
+                ]
               }
             }
           }
@@ -228,12 +243,12 @@
         "properties": {
           "seq_a": {
             "type": "string",
-            "name":"DNA sequence 1"
+            "name":"Genome sequence 1"
             
           },
           "seq_b": {
             "type": "string",
-            "name":"DNA sequence 2"
+            "name":"Genome sequence 2"
           },
           "match":{
             "type":"integer",
@@ -342,6 +357,33 @@
               "properties":{
                   "AA":{
                       "type":"integer"
+                  },
+                  "CC":{
+                    "type":"integer"
+                  },
+                  "GG":{
+                    "type":"integer"
+                  },
+                  "TT":{
+                    "type":"integer"
+                  },
+                  "CA":{
+                    "type":"integer"
+                  },
+                  "GA":{
+                    "type":"integer"
+                  },
+                  "TA":{
+                    "type":"integer"
+                  },
+                  "GC":{
+                    "type":"integer"
+                  },
+                  "TC":{
+                    "type":"integer"
+                  },
+                  "TG":{
+                    "type":"integer"
                   }
               }
           }
@@ -392,7 +434,7 @@
           }
         }
       },
-      "MSAProgressiveRequestPostBody": {
+      "DNA-MSAProgressiveRequestPostBody": {
         "type": "object",
         "properties": {
           "sequences": {
@@ -425,10 +467,96 @@
           "gap":{
             "type":"integer",
             "name":"Gap penalty (negative integer)"
+          },
+          "seq_type":{
+            "type":"string",
+            "name":"Genome sequence type",
+            "enum": ["DNA"]
+          },
+          "sub_mat":{
+            "type":"object",
+            "properties":{
+                "AA":{
+                    "type":"integer"
+                },
+                "CC":{
+                  "type":"integer"
+                },
+                "GG":{
+                  "type":"integer"
+                },
+                "TT":{
+                  "type":"integer"
+                },
+                "CA":{
+                  "type":"integer"
+                },
+                "GA":{
+                  "type":"integer"
+                },
+                "TA":{
+                  "type":"integer"
+                },
+                "GC":{
+                  "type":"integer"
+                },
+                "TC":{
+                  "type":"integer"
+                },
+                "TG":{
+                  "type":"integer"
+                }
+            }
           }
         }
       },
-      "MSAProgressiveOptimalRequestPostBody": {
+      "Protein-MSAProgressiveRequestPostBody": {
+        "type": "object",
+        "properties": {
+          "sequences": {
+            "type":"array",
+            "name":"DNA sequences",
+            "items":{
+              "type": "string"
+            }
+          },
+          "order": {
+            "type":"array",
+            "name":"Order of compairing of pairs",
+            "items":{
+              "type": "array",
+              "maxItems": 2,
+              "minItems": 2,
+              "items":{
+                  "type":"integer"
+              }
+            }
+          },
+          "match":{
+            "type":"integer",
+            "name":"Match score (positive integer)"
+          },
+          "mismatch":{
+            "type":"integer",
+            "name":"Mismatch penalty (negative integer)"
+          },
+          "gap":{
+            "type":"integer",
+            "name":"Gap penalty (negative integer)"
+          },
+          "seq_type":{
+            "type":"string",
+            "name":"Genome sequence type",
+            "enum": ["PROTEIN"]
+          },
+          "sub_mat":{
+            "type":"string",
+            "name" : "Substitution matrix name",
+            "enum": ["DEFAULT","BLOSUM30","BLOSUM45","BLOSUM50","BLOSUM90","BLOSUM90"]
+          }
+        }
+      },
+      "DNA-MSAProgressiveOptimalRequestPostBody": {
         "type": "object",
         "properties": {
           "sequences": {
@@ -449,7 +577,81 @@
           "gap":{
             "type":"integer",
             "name":"Gap penalty (negative integer)"
+          },
+          "seq_type":{
+            "type":"string",
+            "name":"Genome sequence type",
+            "enum": ["DNA"]
+          },
+          "sub_mat":{
+            "type":"object",
+            "properties":{
+                "AA":{
+                    "type":"integer"
+                },
+                "CC":{
+                  "type":"integer"
+                },
+                "GG":{
+                  "type":"integer"
+                },
+                "TT":{
+                  "type":"integer"
+                },
+                "CA":{
+                  "type":"integer"
+                },
+                "GA":{
+                  "type":"integer"
+                },
+                "TA":{
+                  "type":"integer"
+                },
+                "GC":{
+                  "type":"integer"
+                },
+                "TC":{
+                  "type":"integer"
+                },
+                "TG":{
+                  "type":"integer"
+                }
+            }
           }
+        }
+      },
+      "Protein-MSAProgressiveOptimalRequestPostBody": {
+        "type": "object",
+        "properties": {
+          "sequences": {
+            "type":"array",
+            "name":"DNA sequences",
+            "items":{
+              "type": "string"
+            }
+          },
+          "match":{
+            "type":"integer",
+            "name":"Match score (positive integer)"
+          },
+          "mismatch":{
+            "type":"integer",
+            "name":"Mismatch penalty (negative integer)"
+          },
+          "gap":{
+            "type":"integer",
+            "name":"Gap penalty (negative integer)"
+          },
+          "seq_type":{
+            "type":"string",
+            "name":"Genome sequence type",
+            "enum": ["PROTEIN"]
+          },
+          "sub_mat":{
+            "type":"string",
+            "name" : "Substitution matrix name",
+            "enum": ["DEFAULT","BLOSUM30","BLOSUM45","BLOSUM50","BLOSUM90","BLOSUM90"]
+        }
         }
       },
       "MSAResult":{
