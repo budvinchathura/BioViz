@@ -2,12 +2,14 @@ from MSA.Algorithms.Algorithm import Algorithm
 from MSA.Algorithms.NWProf import NWProf
 from PairAlign.Executer import Executer
 
+
 class ProgressiveOptimal(Algorithm):
     """
     Algorithm class for executing optimal progressive MSA algorithm
     """
 
-    def __init__(self, seq_type, sub_mat, sequences, match_score=1, mismatch_penalty=-1, gap_penalty=-1):
+    def __init__(self, seq_type, sub_mat, sequences,
+                 match_score=1, mismatch_penalty=-1, gap_penalty=-1):
         self.sequences = sequences
         self.len_seq = len(sequences)
 
@@ -43,8 +45,11 @@ class ProgressiveOptimal(Algorithm):
                     if i == j:
                         continue
                     nw_prof_algorithm = NWProf(self.seq_type, self.sub_mat,
-                        self.sequences[i][1], self.sequences[j][1],
-                        self.match_score, self.mismatch_penalty, self.gap_penalty)
+                                               self.sequences[i][1],
+                                               self.sequences[j][1],
+                                               self.match_score,
+                                               self.mismatch_penalty,
+                                               self.gap_penalty)
                     executer = Executer(nw_prof_algorithm)
                     result = executer.get_results()
                     score = result['score']

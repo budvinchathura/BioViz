@@ -6,10 +6,10 @@ from MSA.Algorithms.ProgressiveOptimal import ProgressiveOptimal
 from MSA.Validators.msa_validator import validate_msa_progessive
 from MSA.Validators.msa_validator import validate_msa_progessive_optimal
 
-msa_bp = Blueprint('msa_bp', __name__)
+MSA_BP = Blueprint('MSA_BP', __name__)
 
 
-@msa_bp.route('/progressive', methods=['POST'])
+@MSA_BP.route('/progressive', methods=['POST'])
 def progressive():
     """
     function handler for /progressive route.
@@ -26,7 +26,9 @@ def progressive():
     mismatch = int(request_data['mismatch']) if sub_mat == 'DEFAULT' else 0
     gap = int(request_data['gap'])
     progressive_algorithm = Progressive(seq_type, sub_mat,
-        request_data['sequences'], request_data['order'], match, mismatch, gap)
+                                        request_data['sequences'],
+                                        request_data['order'],
+                                        match, mismatch, gap)
 
     executer = Executer(progressive_algorithm)
     result = executer.get_results()
@@ -35,7 +37,7 @@ def progressive():
     return jsonify(resp)
 
 
-@msa_bp.route('/progressive-optimal', methods=['POST'])
+@MSA_BP.route('/progressive-optimal', methods=['POST'])
 def progressive_optimal():
     """
     function handler for /progressive-optimal route.
@@ -51,11 +53,10 @@ def progressive_optimal():
     mismatch = int(request_data['mismatch']) if sub_mat == 'DEFAULT' else 0
     gap = int(request_data['gap'])
     progressive_algorithm = ProgressiveOptimal(seq_type, sub_mat,
-        request_data['sequences'], match, mismatch, gap)
+                                               request_data['sequences'], match, mismatch, gap)
 
     executer = Executer(progressive_algorithm)
     result = executer.get_results()
 
     resp = {'result': result}
     return jsonify(resp)
-

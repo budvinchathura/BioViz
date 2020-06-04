@@ -4,9 +4,9 @@ Test classes for /pair/nw route
 import unittest
 import json
 
-from app import app
+from app import APP
 
-app.testing = True
+APP.testing = True
 
 VAID_DATA_FILE_NAME = 'test/API/BasicPairAlign/valid_data.json'
 INVAID_DATA_FILE_NAME = 'test/API/BasicPairAlign/invalid_data.json'
@@ -17,7 +17,7 @@ INVAID_DATA_FILE_NAME = 'test/API/BasicPairAlign/invalid_data.json'
 class NWRouteTestValid(unittest.TestCase):
 
     def setUp(self):
-        self.client = app.test_client()
+        self.client = APP.test_client()
         with open(VAID_DATA_FILE_NAME, 'r') as file:
             self.data = json.load(file)
 
@@ -35,7 +35,7 @@ class NWRouteTestValid(unittest.TestCase):
 class NWRouteTestInvalid(unittest.TestCase):
 
     def setUp(self):
-        self.client = app.test_client()
+        self.client = APP.test_client()
         with open(INVAID_DATA_FILE_NAME, 'r') as file:
             self.data = json.load(file)
 
@@ -53,7 +53,7 @@ class NWRouteTestInvalid(unittest.TestCase):
 class SWRouteTestValid(unittest.TestCase):
 
     def setUp(self):
-        self.client = app.test_client()
+        self.client = APP.test_client()
         with open(VAID_DATA_FILE_NAME, 'r') as file:
             self.data = json.load(file)
 
@@ -71,7 +71,7 @@ class SWRouteTestValid(unittest.TestCase):
 class SWRouteTestInvalid(unittest.TestCase):
 
     def setUp(self):
-        self.client = app.test_client()
+        self.client = APP.test_client()
         with open(INVAID_DATA_FILE_NAME, 'r') as file:
             self.data = json.load(file)
 
@@ -84,3 +84,4 @@ class SWRouteTestInvalid(unittest.TestCase):
                 '/pair/sw', data=json.dumps(item), headers={'Content-Type': 'application/json'})
             # print(result.data)
             self.assertEqual(result.status, '400 BAD REQUEST', 'failed input:\n'+str(item))
+            

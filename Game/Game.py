@@ -3,10 +3,10 @@ from flask import Blueprint,jsonify,request
 from Game.Games.AlignmentGame import AlignmentGame
 from Game.GameExecuter import GameExecuter
 
-game_bp = Blueprint('game_bp', __name__)
+GAME_BP = Blueprint('game_bp', __name__)
 
 
-@game_bp.route('/align',methods=['POST'])
+@GAME_BP.route('/align',methods=['POST'])
 def game_score():
     request_data = request.get_json()
     seq_a = str(request_data['seq_a'])

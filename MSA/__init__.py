@@ -1,1 +1,1 @@
-from MSA.MSA import msa_bp
+from MSA.MSA import MSA_BP

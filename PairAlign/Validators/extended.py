@@ -1,15 +1,15 @@
 from cerberus import Validator
 
-validator = Validator()
+VALIDATOR = Validator()
 
-extendedSchema = {
+EXTENDED_SCHEMA = {
     "seq_type": {"required": True, "type": "string", "allowed": ["DNA", "PROTEIN"]},
     "sub_mat": {"required": True,
                 "oneof": [
                     {
                         "type": "dict", "schema": {
-                                "TG": {"required": True, "regex": "^-{0,1}[0-9]+$"},
-                                "TC": {"required": True, "regex": "^-{0,1}[0-9]+$"},
+                            "TG": {"required": True, "regex": "^-{0,1}[0-9]+$"},
+                            "TC": {"required": True, "regex": "^-{0,1}[0-9]+$"},
                             "TA": {"required": True, "regex": "^-{0,1}[0-9]+$"},
                             "GC": {"required": True, "regex": "^-{0,1}[0-9]+$"},
                             "GA": {"required": True, "regex": "^-{0,1}[0-9]+$"},
@@ -31,26 +31,28 @@ extendedSchema = {
                     }
                 ]
                 },
-    "seq_a": {"required": True, "type": "string", "minlength": 1, "maxlength": 1000, "nullable": False, "oneof": [
-        {
-            "regex": "^[agtcAGTC]+$",
-            "dependencies": {"seq_type": ["DNA"]}
-        },
-        {
-            "regex": "^[a-zA-Z]+$",
-            "dependencies": {"seq_type": ["PROTEIN"]}
-        }
-    ]},
-    "seq_b": {"required": True, "type": "string", "minlength": 1, "maxlength": 1000, "nullable": False, "oneof": [
-        {
-            "regex": "^[agtcAGTC]+$",
-            "dependencies": {"seq_type": ["DNA"]}
-        },
-        {
-            "regex": "^[a-zA-Z]+$",
-            "dependencies": {"seq_type": ["PROTEIN"]}
-        }
-    ]},
+    "seq_a": {"required": True, "type": "string",
+              "minlength": 1, "maxlength": 1000, "nullable": False, "oneof": [
+                  {
+                      "regex": "^[agtcAGTC]+$",
+                      "dependencies": {"seq_type": ["DNA"]}
+                  },
+                  {
+                      "regex": "^[a-zA-Z]+$",
+                      "dependencies": {"seq_type": ["PROTEIN"]}
+                  }
+              ]},
+    "seq_b": {"required": True, "type": "string",
+              "minlength": 1, "maxlength": 1000, "nullable": False, "oneof": [
+                  {
+                      "regex": "^[agtcAGTC]+$",
+                      "dependencies": {"seq_type": ["DNA"]}
+                  },
+                  {
+                      "regex": "^[a-zA-Z]+$",
+                      "dependencies": {"seq_type": ["PROTEIN"]}
+                  }
+              ]},
     "match": {"required": False, "nullable": True, 'type': 'integer', 'coerce': int},
     "mismatch": {"required": False, "nullable": True, 'type': 'integer', 'coerce': int},
     "opening_gap": {"required": True, "nullable": False, 'type': 'integer', 'coerce': int},
@@ -63,5 +65,5 @@ def validate_pair_align_extended(data):
     """
     validates extended pair align request
     """
-    status = validator.validate(data, extendedSchema)
-    return (status, validator.errors)
+    status = VALIDATOR.validate(data, EXTENDED_SCHEMA)
+    return (status, VALIDATOR.errors)

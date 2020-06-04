@@ -6,6 +6,7 @@ class Executer():
         self.algorithm = algorithm
 
     def get_results(self) -> dict:
+        ''' Give results'''
         self.algorithm.initialize()
         self.algorithm.calculate_score()
         self.algorithm.traceback()
@@ -14,4 +15,8 @@ class Executer():
         score = self.algorithm.get_score()
         score_mat = self.algorithm.get_score_matrix()
         direction_mat = self.algorithm.get_direction_matrix()
-        return {'score': score, 'alignments': alignments,'score_matrix':score_mat,'direction_matrix':direction_mat}
+        return {'score': score,
+                'alignments': alignments,
+                'score_matrix': score_mat,
+                'direction_matrix': direction_mat
+                }

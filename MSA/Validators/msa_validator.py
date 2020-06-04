@@ -1,15 +1,15 @@
 from cerberus import Validator
 
-validator = Validator()
+VALIDATOR = Validator()
 
-msaProgressiveSchema = {
-    "seq_type":{"required": True, "type": "string", "allowed": ["DNA", "PROTEIN"]},
+MSA_PROGRESSIVE_SCHEMA = {
+    "seq_type": {"required": True, "type": "string", "allowed": ["DNA", "PROTEIN"]},
     "sub_mat": {"required": True,
                 "oneof": [
                     {
                         "type": "dict", "schema": {
-                                "TG": {"required": True, "regex": "^-{0,1}[0-9]+$"},
-                                "TC": {"required": True, "regex": "^-{0,1}[0-9]+$"},
+                            "TG": {"required": True, "regex": "^-{0,1}[0-9]+$"},
+                            "TC": {"required": True, "regex": "^-{0,1}[0-9]+$"},
                             "TA": {"required": True, "regex": "^-{0,1}[0-9]+$"},
                             "GC": {"required": True, "regex": "^-{0,1}[0-9]+$"},
                             "GA": {"required": True, "regex": "^-{0,1}[0-9]+$"},
@@ -31,42 +31,47 @@ msaProgressiveSchema = {
                     }
                 ]
                 },
-    "sequences": {"required":True, "type":"list", "minlength":2, "maxlength":6, "nullable":False, "oneof":[
-        {
-            "schema":{
-                "type":"string", 
-                "minlength":1, 
-                "maxlength":1000, 
-                "nullable":False, 
-                "regex": "^[agtcAGTC]+$"
-                },
-                "dependencies": {"seq_type": ["DNA"]}
-        },
-        {
-            "schema":{
-                "type":"string", 
-                "minlength":1, 
-                "maxlength":1000, 
-                "nullable":False, 
-                "regex": "^[a-zA-Z]+$"
-                },
-                "dependencies": {"seq_type": ["PROTEIN"]}
-        }
-        ]},
-    "order": {"required":True, "type":"list", "minlength":1, "maxlength":5, "empty":False, "schema": {"type": "list", 'items':[{'type': 'integer', 'coerce': int},{'type': 'integer', 'coerce': int}]}},
-    "match": {"required":True, "nullable":False, 'type': 'integer', 'coerce': int},
-    "mismatch": {"required":True, "nullable":False, 'type': 'integer', 'coerce': int},
-    "gap": {"required":True, "nullable":False, 'type': 'integer', 'coerce': int}
+    "sequences": {"required": True, "type": "list",
+                  "minlength": 2, "maxlength": 6, "nullable": False,
+                  "oneof": [
+                      {
+                          "schema": {
+                              "type": "string",
+                              "minlength": 1,
+                              "maxlength": 1000,
+                              "nullable": False,
+                              "regex": "^[agtcAGTC]+$"
+                          },
+                          "dependencies": {"seq_type": ["DNA"]}
+                      },
+                      {
+                          "schema": {
+                              "type": "string",
+                              "minlength": 1,
+                              "maxlength": 1000,
+                              "nullable": False,
+                              "regex": "^[a-zA-Z]+$"
+                          },
+                          "dependencies": {"seq_type": ["PROTEIN"]}
+                      }
+                  ]},
+    "order": {"required": True, "type": "list", "minlength": 1, "maxlength": 5, "empty": False,
+              "schema": {"type": "list",
+                         'items': [{'type': 'integer', 'coerce': int},
+                                   {'type': 'integer', 'coerce': int}]}},
+    "match": {"required": True, "nullable": False, 'type': 'integer', 'coerce': int},
+    "mismatch": {"required": True, "nullable": False, 'type': 'integer', 'coerce': int},
+    "gap": {"required": True, "nullable": False, 'type': 'integer', 'coerce': int}
 }
 
-msaProgressiveOptimalSchema = {
-    "seq_type":{"required": True, "type": "string", "allowed": ["DNA", "PROTEIN"]},
+MSA_PROGRESSIVE_OPTIMAL_SCHEMA = {
+    "seq_type": {"required": True, "type": "string", "allowed": ["DNA", "PROTEIN"]},
     "sub_mat": {"required": True,
                 "oneof": [
                     {
                         "type": "dict", "schema": {
-                                "TG": {"required": True, "regex": "^-{0,1}[0-9]+$"},
-                                "TC": {"required": True, "regex": "^-{0,1}[0-9]+$"},
+                            "TG": {"required": True, "regex": "^-{0,1}[0-9]+$"},
+                            "TC": {"required": True, "regex": "^-{0,1}[0-9]+$"},
                             "TA": {"required": True, "regex": "^-{0,1}[0-9]+$"},
                             "GC": {"required": True, "regex": "^-{0,1}[0-9]+$"},
                             "GA": {"required": True, "regex": "^-{0,1}[0-9]+$"},
@@ -88,33 +93,35 @@ msaProgressiveOptimalSchema = {
                     }
                 ]
                 },
-    "sequences": {"required":True, "type":"list", "minlength":2, "maxlength":6, "nullable":False, "oneof":[
-        {
-            "schema":{
-                "type":"string", 
-                "minlength":1, 
-                "maxlength":1000, 
-                "nullable":False, 
-                "regex": "^[agtcAGTC]+$"
-                },
-                "dependencies": {"seq_type": ["DNA"]}
-        },
-        {
-            "schema":{
-                "type":"string", 
-                "minlength":1, 
-                "maxlength":1000, 
-                "nullable":False, 
-                "regex": "^[a-zA-Z]+$"
-                },
-                "dependencies": {"seq_type": ["PROTEIN"]}
-        }
-        ]},
-    "match": {"required":True, "nullable":False, 'type': 'integer', 'coerce': int},
-    "mismatch": {"required":True, "nullable":False, 'type': 'integer', 'coerce': int},
-    "gap": {"required":True, "nullable":False, 'type': 'integer', 'coerce': int}
+    "sequences": {"required": True, "type": "list",
+                  "minlength": 2, "maxlength": 6, "nullable": False, "oneof": [
+                      {
+                          "schema": {
+                              "type": "string",
+                              "minlength": 1,
+                              "maxlength": 1000,
+                              "nullable": False,
+                              "regex": "^[agtcAGTC]+$"
+                          },
+                          "dependencies": {"seq_type": ["DNA"]}
+                      },
+                      {
+                          "schema": {
+                              "type": "string",
+                              "minlength": 1,
+                              "maxlength": 1000,
+                              "nullable": False,
+                              "regex": "^[a-zA-Z]+$"
+                          },
+                          "dependencies": {"seq_type": ["PROTEIN"]}
+                      }
+                  ]},
+    "match": {"required": True, "nullable": False, 'type': 'integer', 'coerce': int},
+    "mismatch": {"required": True, "nullable": False, 'type': 'integer', 'coerce': int},
+    "gap": {"required": True, "nullable": False, 'type': 'integer', 'coerce': int}
 }
-#this doesn't checked
+# this doesn't checked
+
 
 def validate_msa_progessive(data):
     """
@@ -122,18 +129,19 @@ def validate_msa_progessive(data):
     """
     try:
         length = len(data['sequences'])
-        msaProgressiveSchema['order']['minlength'] = int(length) -1
-        msaProgressiveSchema['order']['maxlength'] = int(length) -1
+        MSA_PROGRESSIVE_SCHEMA['order']['minlength'] = int(length) - 1
+        MSA_PROGRESSIVE_SCHEMA['order']['maxlength'] = int(length) - 1
     except:
-        msaProgressiveSchema['order']['minlength'] = 1
-        msaProgressiveSchema['order']['maxlength'] = 5
+        MSA_PROGRESSIVE_SCHEMA['order']['minlength'] = 1
+        MSA_PROGRESSIVE_SCHEMA['order']['maxlength'] = 5
 
-    status = validator.validate(data, msaProgressiveSchema)
-    return (status, validator.errors)
+    status = VALIDATOR.validate(data, MSA_PROGRESSIVE_SCHEMA)
+    return (status, VALIDATOR.errors)
+
 
 def validate_msa_progessive_optimal(data):
     """
     validates extended pair align request
     """
-    status = validator.validate(data, msaProgressiveOptimalSchema)
-    return (status, validator.errors)
+    status = VALIDATOR.validate(data, MSA_PROGRESSIVE_OPTIMAL_SCHEMA)
+    return (status, VALIDATOR.errors)

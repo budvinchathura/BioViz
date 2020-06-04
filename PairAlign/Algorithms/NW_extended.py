@@ -1,7 +1,7 @@
 import numpy as np
 
 from PairAlign.Algorithms.Algorithm import Algorithm
-from PairAlign.Algorithms.SubstitutionMatrix.subsMat import BLOSUM
+from PairAlign.Algorithms.SubstitutionMatrix.substitution_matrices import BLOSUM
 
 
 class NWExtended(Algorithm):
@@ -43,7 +43,7 @@ class NWExtended(Algorithm):
             (self.len_a + 1, self.len_b + 1), dtype=object)
 
     def initialize(self):
-        
+
         for i in range(self.len_a+1):
             self.score_mat[i][0][0] = self.opening_gap_penalty + \
                 self.extending_gap_penalty*(i-1)
@@ -67,7 +67,8 @@ class NWExtended(Algorithm):
 
         elif self.seq_type == 'DNA':
             char1, char2 = (self.seq_a[a_i].upper(), self.seq_b[b_i].upper()) if (
-                self.seq_a[a_i].upper() > self.seq_b[b_i].upper()) else (self.seq_b[b_i].upper(), self.seq_a[a_i].upper())
+                self.seq_a[a_i].upper() > self.seq_b[b_i].upper()) else \
+                (self.seq_b[b_i].upper(), self.seq_a[a_i].upper())
             return int(self.sub_mat[char1+char2])
         elif self.seq_type == 'PROTEIN':
             char1, char2 = (self.seq_a[a_i].upper(), self.seq_b[b_i].upper()) if (
@@ -79,12 +80,14 @@ class NWExtended(Algorithm):
         for i in range(1, self.len_a + 1):
             for j in range(1, self.len_b + 1):
 
-                open_gap_1 = self.score_mat[i-1][j][0] + self.opening_gap_penalty
+                open_gap_1 = self.score_mat[i -
+                                            1][j][0] + self.opening_gap_penalty
                 extend_gap_1 = - \
                     np.inf if self.score_mat[i-1][j][1] == '-inf' else \
                     self.score_mat[i-1][j][1] + self.extending_gap_penalty
 
-                open_gap_2 = self.score_mat[i][j-1][0] + self.opening_gap_penalty
+                open_gap_2 = self.score_mat[i][j -
+                                               1][0] + self.opening_gap_penalty
                 extend_gap_2 = - \
                     np.inf if self.score_mat[i][j-1][2] == '-inf' else \
                     self.score_mat[i][j-1][2] + self.extending_gap_penalty
@@ -92,12 +95,13 @@ class NWExtended(Algorithm):
                 max_2 = max(open_gap_1, extend_gap_1)
                 max_3 = max(open_gap_2, extend_gap_2)
 
-                match = self.score_mat[i-1][j-1][0] + self.__similarity(i-1, j-1)
+                match = self.score_mat[i-1][j-1][0] + \
+                    self.__similarity(i-1, j-1)
                 insertion_1 = max_2
                 insertion_2 = max_3
 
                 max_1 = max(match, insertion_1, insertion_2)
-                
+
                 max_value = ['-inf' if max_1 == -np.inf else max_1, '-inf' if max_2 == -
                              np.inf else max_2, '-inf' if max_3 == -np.inf else max_3]
 
@@ -126,11 +130,11 @@ class NWExtended(Algorithm):
         self.score = max(self.score_mat[self.len_a][self.len_b])
 
     def traceback(self):
-        
+
         i = self.len_a
         j = self.len_b
         k = self.score_mat[self.len_a][self.len_b].tolist().index(self.score)
-        
+
         end = False
         if self.priority == 'HIGHROAD':
             while True:
