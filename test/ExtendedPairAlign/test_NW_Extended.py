@@ -31,8 +31,10 @@ class NWTest(unittest.TestCase):
         print(len(self.data))
 
         for item in self.data:
-            algo = NWExtended(item['seq_type'],item['sub_mat'], item['seq_a'], item['seq_b'],
-                      item['match'], item['mismatch'], item['opening_gap'], item['extending_gap'], item['priority'])
+            algo = NWExtended(item['seq_type'], item['sub_mat'],
+                              item['seq_a'], item['seq_b'],
+                              item['match'], item['mismatch'],
+                              item['opening_gap'], item['extending_gap'], item['priority'])
             algo.initialize()
             algo.calculate_score()
             algo.traceback()
@@ -56,24 +58,40 @@ class NWTest(unittest.TestCase):
             mismatch = int(item['mismatch'])
             opening_gap = int(item['opening_gap'])
             extending_gap = int(item['extending_gap'])
-            if(item['sub_mat'] == 'DEFAULT'):
-                ref_score = pairwise2.align.globalmd(item['seq_a'].upper(), item['seq_b'].upper(), match, mismatch, opening_gap, extending_gap,opening_gap,extending_gap, score_only=True, penalize_end_gaps=(True, True))
+            if item['sub_mat'] == 'DEFAULT':
+                ref_score = pairwise2.align.globalmd(item['seq_a'].upper(),
+                                                     item['seq_b'].upper(),
+                                                     match, mismatch,
+                                                     opening_gap,
+                                                     extending_gap,
+                                                     opening_gap,
+                                                     extending_gap,
+                                                     score_only=True,
+                                                     penalize_end_gaps=(True, True))
             else:
                 # subs_mat = matlist.blosum90
-                if (item['sub_mat'] == 'BLOSUM90'):
+                if item['sub_mat'] == 'BLOSUM90':
                     subs_mat = matlist.blosum90
-                elif (item['sub_mat'] == 'BLOSUM62'):
+                elif item['sub_mat'] == 'BLOSUM62':
                     subs_mat = matlist.blosum62
-                elif (item['sub_mat'] == 'BLOSUM60'):
+                elif item['sub_mat'] == 'BLOSUM60':
                     subs_mat = matlist.blosum60
-                elif (item['sub_mat'] == 'BLOSUM50'):
+                elif item['sub_mat'] == 'BLOSUM50':
                     subs_mat = matlist.blosum50
-                elif (item['sub_mat'] == 'BLOSUM45'):
+                elif item['sub_mat'] == 'BLOSUM45':
                     subs_mat = matlist.blosum45
-                elif (item['sub_mat'] == 'BLOSUM30'):
+                elif item['sub_mat'] == 'BLOSUM30':
                     subs_mat = matlist.blosum30
 
-                ref_score = pairwise2.align.globaldd(item['seq_a'].upper(), item['seq_b'].upper(), subs_mat,opening_gap, extending_gap,opening_gap,extending_gap, score_only=True,penalize_end_gaps=(True, True))
+                ref_score = pairwise2.align.globaldd(item['seq_a'].upper(),
+                                                     item['seq_b'].upper(),
+                                                     subs_mat,
+                                                     opening_gap,
+                                                     extending_gap,
+                                                     opening_gap,
+                                                     extending_gap,
+                                                     score_only=True,
+                                                     penalize_end_gaps=(True, True))
             # ref_alignments = []
 
             # for align in ref_result:
@@ -83,7 +101,5 @@ class NWTest(unittest.TestCase):
             # self.assertIn([alignments['algn_a'], alignments['algn_b']], ref_alignments)
 
             # self.assertEqual(score, ref_score)
-            
+
             self.assertEqual(score, ref_score)
-                
-            

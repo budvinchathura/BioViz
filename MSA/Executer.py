@@ -5,6 +5,7 @@ class Executer():
     """
     This Class calls the methods of relevant algorithm in specified order.
     """
+
     def __init__(self, algorithm: Algorithm):
         self.algorithm = algorithm
 

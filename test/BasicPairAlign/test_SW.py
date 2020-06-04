@@ -53,6 +53,4 @@ class SWTest(unittest.TestCase):
 
             # self.assertIn([alignments['algn_a'], alignments['algn_b']], ref_alignments)
 
-            self.assertEqual(score, ref_score,item)
-
-            
+            self.assertEqual(score, ref_score, item)

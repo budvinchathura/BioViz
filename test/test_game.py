@@ -4,6 +4,7 @@ Test classes for testing alignment game
 import unittest
 from Game.Games.AlignmentGame import AlignmentGame
 
+
 class GameTest(unittest.TestCase):
     """
     class for testing alignment game
@@ -167,6 +168,7 @@ class GameTestInputTypeNullInput1(unittest.TestCase):
 
     def tearDown(self):
         del self.algo
+
     def test_null_input1(self):
         """
         Testing for for both null inputs
