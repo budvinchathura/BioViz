@@ -36,16 +36,16 @@ class ProgressiveOptimal(Algorithm):
         remaining = self.len_seq
         offset = 1
         temp_prof_data = {}
+        intermediate_alignment_result = {}
         while remaining > 1:
             current_max_score = float('-inf')
             current_best_result = []
             current_best_pair = []
-            intermediate_alignment_result = {}
             for i in range(remaining):
                 for j in range(i, remaining):
                     if i == j:
                         continue
-                    if (i, j) not in intermediate_alignment_result:
+                    if (self.sequences[i][0], self.sequences[j][0]) not in intermediate_alignment_result:
                         nw_prof_algorithm = NWProf(self.seq_type, self.sub_mat,
                                                    self.sequences[i][1],
                                                    self.sequences[j][1],
@@ -53,9 +53,8 @@ class ProgressiveOptimal(Algorithm):
                                                    self.mismatch_penalty,
                                                    self.gap_penalty)
                         executer = Executer(nw_prof_algorithm)
-                        intermediate_alignment_result[(
-                            i, j)] = executer.get_results()
-                    result = intermediate_alignment_result[(i, j)]
+                        intermediate_alignment_result[(self.sequences[i][0], self.sequences[j][0])] = executer.get_results()
+                    result = intermediate_alignment_result[(self.sequences[i][0], self.sequences[j][0])]
                     score = result['score']
 
                     if score > current_max_score:
