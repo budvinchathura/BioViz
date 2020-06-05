@@ -40,18 +40,22 @@ class ProgressiveOptimal(Algorithm):
             current_max_score = float('-inf')
             current_best_result = []
             current_best_pair = []
+            intermediate_alignment_result = {}
             for i in range(remaining):
                 for j in range(i, remaining):
                     if i == j:
                         continue
-                    nw_prof_algorithm = NWProf(self.seq_type, self.sub_mat,
-                                               self.sequences[i][1],
-                                               self.sequences[j][1],
-                                               self.match_score,
-                                               self.mismatch_penalty,
-                                               self.gap_penalty)
-                    executer = Executer(nw_prof_algorithm)
-                    result = executer.get_results()
+                    if (i, j) not in intermediate_alignment_result:
+                        nw_prof_algorithm = NWProf(self.seq_type, self.sub_mat,
+                                                   self.sequences[i][1],
+                                                   self.sequences[j][1],
+                                                   self.match_score,
+                                                   self.mismatch_penalty,
+                                                   self.gap_penalty)
+                        executer = Executer(nw_prof_algorithm)
+                        intermediate_alignment_result[(
+                            i, j)] = executer.get_results()
+                    result = intermediate_alignment_result[(i, j)]
                     score = result['score']
 
                     if score > current_max_score:
