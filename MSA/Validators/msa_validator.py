@@ -116,7 +116,7 @@ MSA_PROGRESSIVE_SCHEMA = {
                               "minlength": 1,
                               "maxlength": 1000,
                               "nullable": False,
-                              "regex": "^[a-zA-Z]+$"
+                              "regex": "^[abcdefghiklmnpqrstvwxyzABCDEFGHIKLMNPQRSTVWXYZ]+$"
                           },
                           "dependencies": {"seq_type": ["PROTEIN"]}
                       }
@@ -177,7 +177,7 @@ MSA_PROGRESSIVE_OPTIMAL_SCHEMA = {
                               "minlength": 1,
                               "maxlength": 1000,
                               "nullable": False,
-                              "regex": "^[a-zA-Z]+$"
+                              "regex": "^[abcdefghiklmnpqrstvwxyzABCDEFGHIKLMNPQRSTVWXYZ]+$"
                           },
                           "dependencies": {"seq_type": ["PROTEIN"]}
                       }

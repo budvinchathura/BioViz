@@ -38,7 +38,7 @@ EXTENDED_SCHEMA = {
                       "dependencies": {"seq_type": ["DNA"]}
                   },
                   {
-                      "regex": "^[a-zA-Z]+$",
+                      "regex": "^[abcdefghiklmnpqrstvwxyzABCDEFGHIKLMNPQRSTVWXYZ]+$",
                       "dependencies": {"seq_type": ["PROTEIN"]}
                   }
               ]},
@@ -49,7 +49,7 @@ EXTENDED_SCHEMA = {
                       "dependencies": {"seq_type": ["DNA"]}
                   },
                   {
-                      "regex": "^[a-zA-Z]+$",
+                      "regex": "^[abcdefghiklmnpqrstvwxyzABCDEFGHIKLMNPQRSTVWXYZ]+$",
                       "dependencies": {"seq_type": ["PROTEIN"]}
                   }
               ]},
