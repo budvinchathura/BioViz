@@ -53,8 +53,10 @@ class ProgressiveOptimal(Algorithm):
                                                    self.mismatch_penalty,
                                                    self.gap_penalty)
                         executer = Executer(nw_prof_algorithm)
-                        intermediate_alignment_result[(self.sequences[i][0], self.sequences[j][0])] = executer.get_results()
-                    result = intermediate_alignment_result[(self.sequences[i][0], self.sequences[j][0])]
+                        intermediate_alignment_result[(
+                            self.sequences[i][0], self.sequences[j][0])] = executer.get_results()
+                    result = intermediate_alignment_result[(
+                        self.sequences[i][0], self.sequences[j][0])] 
                     score = result['score']
 
                     if score > current_max_score:

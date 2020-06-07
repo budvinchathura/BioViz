@@ -1,6 +1,72 @@
 from cerberus import Validator
 
-VALIDATOR = Validator()
+
+class ExtendedValidator(Validator):
+    ''' Add functionalities which doesn't in the generic library '''
+    def _validate_order_length(self, other, field, value):
+        """ Test length of order agains length of sequences.
+
+        The rule's arguments are validated against this schema:
+        {'type': 'string'}
+        """
+        if other not in self.document:
+            return False
+        if len(value) != len(self.document[other]) - 1:
+            self._error(field,
+                        "Length of field %s doesn't match field %s's length." %(field, other))
+    
+    def _validate_item_range(self, other, field, value):
+        """ Test validity of the items against length of sequences.
+
+        The rule's arguments are validated against this schema:
+        {'type': 'string'}
+        """
+        if other not in self.document:
+            return False
+        for sub in value:
+            for n in sub:
+                if 1 > int(n) or int(n) > (2*len(self.document[other]) - 2):
+                    self._error(field,
+                        "Values should be in range %s - %s" %(1, 2*len(self.document[other]) - 2))
+                    
+
+    def _validate_unique(self, argument, field, value):
+        """ Test uniqueness of order items.
+
+        The rule's arguments are validated against this schema:
+        {'type': 'boolean'}
+        """
+        temp = []
+        for sub in value:
+            for n in sub:
+                if n not in temp:
+                    temp.append(n)
+                elif not argument:
+                    pass
+                else:
+                    self._error(field,
+                        "Values should be unique")
+
+    def _validate_unique(self, argument, field, value):
+        """ Test uniqueness of order items.
+
+        The rule's arguments are validated against this schema:
+        {'type': 'boolean'}
+        """
+        temp = []
+        
+        for sub in value:
+            for n in sub:
+                if n not in temp:
+                    temp.append(n)
+                elif not argument:
+                    pass
+                else:
+                    self._error(field,
+                        "Values should be unique")
+
+
+VALIDATOR = ExtendedValidator()
 
 MSA_PROGRESSIVE_SCHEMA = {
     "seq_type": {"required": True, "type": "string", "allowed": ["DNA", "PROTEIN"]},
@@ -50,13 +116,13 @@ MSA_PROGRESSIVE_SCHEMA = {
                               "minlength": 1,
                               "maxlength": 1000,
                               "nullable": False,
-                              "regex": "^[a-zA-Z]+$"
+                              "regex": "^[abcdefghiklmnpqrstvwxyzABCDEFGHIKLMNPQRSTVWXYZ]+$"
                           },
                           "dependencies": {"seq_type": ["PROTEIN"]}
                       }
                   ]},
-    "order": {"required": True, "type": "list", "minlength": 1, "maxlength": 5, "empty": False,
-              "schema": {"type": "list",
+    "order": {"required": True, "type": "list", "order_length": "sequences", "empty": False,
+              "unique": True, "item_range": "sequences", "schema": {"type": "list",
                          'items': [{'type': 'integer', 'coerce': int},
                                    {'type': 'integer', 'coerce': int}]}},
     "match": {"required": True, "nullable": False, 'type': 'integer', 'coerce': int},
@@ -111,7 +177,7 @@ MSA_PROGRESSIVE_OPTIMAL_SCHEMA = {
                               "minlength": 1,
                               "maxlength": 1000,
                               "nullable": False,
-                              "regex": "^[a-zA-Z]+$"
+                              "regex": "^[abcdefghiklmnpqrstvwxyzABCDEFGHIKLMNPQRSTVWXYZ]+$"
                           },
                           "dependencies": {"seq_type": ["PROTEIN"]}
                       }
@@ -127,14 +193,6 @@ def validate_msa_progessive(data):
     """
     validates extended pair align request
     """
-    try:
-        length = len(data['sequences'])
-        MSA_PROGRESSIVE_SCHEMA['order']['minlength'] = int(length) - 1
-        MSA_PROGRESSIVE_SCHEMA['order']['maxlength'] = int(length) - 1
-    except:
-        MSA_PROGRESSIVE_SCHEMA['order']['minlength'] = 1
-        MSA_PROGRESSIVE_SCHEMA['order']['maxlength'] = 5
-
     status = VALIDATOR.validate(data, MSA_PROGRESSIVE_SCHEMA)
     return (status, VALIDATOR.errors)
 
