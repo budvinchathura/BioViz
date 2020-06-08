@@ -1,5 +1,5 @@
 """
-Test classes for /pair/nw and /pair/sw routes
+Test classes for /pair/nw-affine and /pair/sw-affine routes
 """
 import unittest
 import json
@@ -8,15 +8,15 @@ from app import APP
 
 APP.testing = True
 
-VAID_DATA_FILE_NAME = 'test/API/BasicPairAlign/valid_data.json'
-INVAID_DATA_FILE_NAME = 'test/API/BasicPairAlign/invalid_data.json'
+VAID_DATA_FILE_NAME = 'test/API/ExtendedPairAlign/valid_data.json'
+INVAID_DATA_FILE_NAME = 'test/API/ExtendedPairAlign/invalid_data.json'
 
 # python -m coverage run -m unittest discover
 
 
 class NWRouteTestValid(unittest.TestCase):
     """
-    Test class to test /pair/nw route with valid data
+    Test class to test /pair/nw-affine route with valid data
     """
 
     def setUp(self):
@@ -33,14 +33,16 @@ class NWRouteTestValid(unittest.TestCase):
         """
         for item in self.data:
             result = self.client.post(
-                '/pair/nw', data=json.dumps(item), headers={'Content-Type': 'application/json'})
+                '/pair/nw-affine', data=json.dumps(item),
+                headers={'Content-Type': 'application/json'})
             # print(result.status)
-            self.assertEqual(result.status, '200 OK', 'failed input:\n'+str(item))
+            self.assertEqual(result.status, '200 OK',
+                             'failed input:\n'+str(item))
 
 
 class NWRouteTestInvalid(unittest.TestCase):
     """
-    Test class to test /pair/nw route with invalid data
+    Test class to test /pair/nw-affine route with invalid data
     """
 
     def setUp(self):
@@ -57,14 +59,16 @@ class NWRouteTestInvalid(unittest.TestCase):
         """
         for item in self.data:
             result = self.client.post(
-                '/pair/nw', data=json.dumps(item), headers={'Content-Type': 'application/json'})
+                '/pair/nw-affine', data=json.dumps(item),
+                headers={'Content-Type': 'application/json'})
             # print(result.data)
-            self.assertEqual(result.status, '400 BAD REQUEST', 'failed input:\n'+str(item))
+            self.assertEqual(result.status, '400 BAD REQUEST',
+                             'failed input:\n'+str(item))
 
 
 class SWRouteTestValid(unittest.TestCase):
     """
-    Test class to test /pair/sw route with valid data
+    Test class to test /pair/sw-affine route with valid data
     """
 
     def setUp(self):
@@ -81,14 +85,16 @@ class SWRouteTestValid(unittest.TestCase):
         """
         for item in self.data:
             result = self.client.post(
-                '/pair/sw', data=json.dumps(item), headers={'Content-Type': 'application/json'})
+                '/pair/sw-affine', data=json.dumps(item),
+                headers={'Content-Type': 'application/json'})
             # print(result.status)
-            self.assertEqual(result.status, '200 OK', 'failed input:\n'+str(item))
+            self.assertEqual(result.status, '200 OK',
+                             'failed input:\n'+str(item))
 
 
 class SWRouteTestInvalid(unittest.TestCase):
     """
-    Test class to test /pair/sw route with invalid data
+    Test class to test /pair/sw-affine route with invalid data
     """
 
     def setUp(self):
@@ -105,7 +111,8 @@ class SWRouteTestInvalid(unittest.TestCase):
         """
         for item in self.data:
             result = self.client.post(
-                '/pair/sw', data=json.dumps(item), headers={'Content-Type': 'application/json'})
+                '/pair/sw-affine', data=json.dumps(item),
+                headers={'Content-Type': 'application/json'})
             # print(result.data)
-            self.assertEqual(result.status, '400 BAD REQUEST', 'failed input:\n'+str(item))
-            
+            self.assertEqual(result.status, '400 BAD REQUEST',
+                             'failed input:\n'+str(item))

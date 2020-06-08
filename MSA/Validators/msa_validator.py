@@ -3,8 +3,9 @@ from cerberus import Validator
 
 class ExtendedValidator(Validator):
     ''' Add functionalities which doesn't in the generic library '''
-    def _validate_order_length(self, other, field, value):
-        """ Test length of order agains length of sequences.
+
+    def _validate_pairing_length(self, other, field, value):
+        """ Test length of MSA pairing order against length of sequences.
 
         The rule's arguments are validated against this schema:
         {'type': 'string'}
@@ -13,57 +14,38 @@ class ExtendedValidator(Validator):
             return False
         if len(value) != len(self.document[other]) - 1:
             self._error(field,
-                        "Length of field %s doesn't match field %s's length." %(field, other))
-    
-    def _validate_item_range(self, other, field, value):
-        """ Test validity of the items against length of sequences.
+                        "Length of field %s doesn't match field %s's length." % (field, other))
+
+    def _validate_pairing_validity(self, other, field, value):
+        """ Test validity of the pairing against length of sequences.
 
         The rule's arguments are validated against this schema:
         {'type': 'string'}
         """
         if other not in self.document:
             return False
-        for sub in value:
-            for n in sub:
-                if 1 > int(n) or int(n) > (2*len(self.document[other]) - 2):
-                    self._error(field,
-                        "Values should be in range %s - %s" %(1, 2*len(self.document[other]) - 2))
-                    
+        n_sequences = len(self.document[other])
+        current_set = set([])
+        for i in range(1, n_sequences+1):
+            current_set.add(i)
+        flag = True
 
-    def _validate_unique(self, argument, field, value):
-        """ Test uniqueness of order items.
+        for index, pair in enumerate(value):
+            if not isinstance(pair, list):
+                flag = False
+                break
+            if not len(pair) == 2:
+                flag = False
+                break
+            if not((pair[0] in current_set) and (pair[1] in current_set) and (pair[0] != pair[1])):
+                flag = False
+                break
+            current_set.remove(pair[0])
+            current_set.remove(pair[1])
+            current_set.add(n_sequences+index+1)
 
-        The rule's arguments are validated against this schema:
-        {'type': 'boolean'}
-        """
-        temp = []
-        for sub in value:
-            for n in sub:
-                if n not in temp:
-                    temp.append(n)
-                elif not argument:
-                    pass
-                else:
-                    self._error(field,
-                        "Values should be unique")
-
-    def _validate_unique(self, argument, field, value):
-        """ Test uniqueness of order items.
-
-        The rule's arguments are validated against this schema:
-        {'type': 'boolean'}
-        """
-        temp = []
-        
-        for sub in value:
-            for n in sub:
-                if n not in temp:
-                    temp.append(n)
-                elif not argument:
-                    pass
-                else:
-                    self._error(field,
-                        "Values should be unique")
+        if not flag:
+            self._error(field, "Pairing order invalid")
 
 
 VALIDATOR = ExtendedValidator()
@@ -121,10 +103,14 @@ MSA_PROGRESSIVE_SCHEMA = {
                           "dependencies": {"seq_type": ["PROTEIN"]}
                       }
                   ]},
-    "order": {"required": True, "type": "list", "order_length": "sequences", "empty": False,
-              "unique": True, "item_range": "sequences", "schema": {"type": "list",
+    "order": {"required": True,
+              "type": "list",
+              "empty": False,
+              "schema": {"type": "list",
                          'items': [{'type': 'integer', 'coerce': int},
-                                   {'type': 'integer', 'coerce': int}]}},
+                                   {'type': 'integer', 'coerce': int}]},
+              "pairing_length": "sequences",
+              "pairing_validity": "sequences"},
     "match": {"required": True, "nullable": False, 'type': 'integer', 'coerce': int},
     "mismatch": {"required": True, "nullable": False, 'type': 'integer', 'coerce': int},
     "gap": {"required": True, "nullable": False, 'type': 'integer', 'coerce': int}
