@@ -1,6 +1,54 @@
 from cerberus import Validator
 
-VALIDATOR = Validator()
+
+class ExtendedValidator(Validator):
+    ''' Add functionalities which doesn't in the generic library '''
+
+    def _validate_pairing_length(self, other, field, value):
+        """ Test length of MSA pairing order against length of sequences.
+
+        The rule's arguments are validated against this schema:
+        {'type': 'string'}
+        """
+        if other not in self.document:
+            return False
+        if len(value) != len(self.document[other]) - 1:
+            self._error(field,
+                        "Length of field %s doesn't match field %s's length." % (field, other))
+
+    def _validate_pairing_validity(self, other, field, value):
+        """ Test validity of the pairing against length of sequences.
+
+        The rule's arguments are validated against this schema:
+        {'type': 'string'}
+        """
+        if other not in self.document:
+            return False
+        n_sequences = len(self.document[other])
+        current_set = set([])
+        for i in range(1, n_sequences+1):
+            current_set.add(i)
+        flag = True
+
+        for index, pair in enumerate(value):
+            if not isinstance(pair, list):
+                flag = False
+                break
+            if not len(pair) == 2:
+                flag = False
+                break
+            if not((pair[0] in current_set) and (pair[1] in current_set) and (pair[0] != pair[1])):
+                flag = False
+                break
+            current_set.remove(pair[0])
+            current_set.remove(pair[1])
+            current_set.add(n_sequences+index+1)
+
+        if not flag:
+            self._error(field, "Pairing order invalid")
+
+
+VALIDATOR = ExtendedValidator()
 
 MSA_PROGRESSIVE_SCHEMA = {
     "seq_type": {"required": True, "type": "string", "allowed": ["DNA", "PROTEIN"]},
@@ -50,15 +98,19 @@ MSA_PROGRESSIVE_SCHEMA = {
                               "minlength": 1,
                               "maxlength": 1000,
                               "nullable": False,
-                              "regex": "^[a-zA-Z]+$"
+                              "regex": "^[abcdefghiklmnpqrstvwxyzABCDEFGHIKLMNPQRSTVWXYZ]+$"
                           },
                           "dependencies": {"seq_type": ["PROTEIN"]}
                       }
                   ]},
-    "order": {"required": True, "type": "list", "minlength": 1, "maxlength": 5, "empty": False,
+    "order": {"required": True,
+              "type": "list",
+              "empty": False,
               "schema": {"type": "list",
                          'items': [{'type': 'integer', 'coerce': int},
-                                   {'type': 'integer', 'coerce': int}]}},
+                                   {'type': 'integer', 'coerce': int}]},
+              "pairing_length": "sequences",
+              "pairing_validity": "sequences"},
     "match": {"required": True, "nullable": False, 'type': 'integer', 'coerce': int},
     "mismatch": {"required": True, "nullable": False, 'type': 'integer', 'coerce': int},
     "gap": {"required": True, "nullable": False, 'type': 'integer', 'coerce': int}
@@ -111,7 +163,7 @@ MSA_PROGRESSIVE_OPTIMAL_SCHEMA = {
                               "minlength": 1,
                               "maxlength": 1000,
                               "nullable": False,
-                              "regex": "^[a-zA-Z]+$"
+                              "regex": "^[abcdefghiklmnpqrstvwxyzABCDEFGHIKLMNPQRSTVWXYZ]+$"
                           },
                           "dependencies": {"seq_type": ["PROTEIN"]}
                       }
@@ -127,14 +179,6 @@ def validate_msa_progessive(data):
     """
     validates extended pair align request
     """
-    try:
-        length = len(data['sequences'])
-        MSA_PROGRESSIVE_SCHEMA['order']['minlength'] = int(length) - 1
-        MSA_PROGRESSIVE_SCHEMA['order']['maxlength'] = int(length) - 1
-    except:
-        MSA_PROGRESSIVE_SCHEMA['order']['minlength'] = 1
-        MSA_PROGRESSIVE_SCHEMA['order']['maxlength'] = 5
-
     status = VALIDATOR.validate(data, MSA_PROGRESSIVE_SCHEMA)
     return (status, VALIDATOR.errors)
 
