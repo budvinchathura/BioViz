@@ -7,7 +7,7 @@ from PairAlign.Algorithms.NW_extended import NWExtended
 
 
 # python -m coverage run Tests/test_pairalign.py
-# python -m unittest discover -s test/NW_Extended
+# python -m unittest discover -s test/ExtendedPairAlign
 
 DATA_FILE_NAME = 'test/ExtendedPairAlign/data.json'
 

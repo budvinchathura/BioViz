@@ -88,8 +88,9 @@ class NWProf:
                     if self.prof_a[i][a_i] == '-' or self.prof_b[j][b_i] == '-':
                         score += self.gap_penalty
                     else:
-                        char1, char2 = (self.prof_a[i][a_i].upper(), self.prof_b[j][b_i].upper()) if (
-                            self.prof_a[i][a_i].upper() > self.prof_b[j][b_i].upper()) else (self.prof_b[j][b_i].upper(), self.prof_a[i][a_i].upper())
+                        char1, char2 = (self.prof_a[i][a_i].upper(), self.prof_b[j][b_i].upper()) \
+                            if (self.prof_a[i][a_i].upper() > self.prof_b[j][b_i].upper()) \
+                            else (self.prof_b[j][b_i].upper(), self.prof_a[i][a_i].upper())
                         score += self.sub_mat[char1+char2]
 
         elif self.seq_type == 'PROTEIN':
@@ -98,10 +99,10 @@ class NWProf:
                     if self.prof_a[i][a_i] == '-' or self.prof_b[j][b_i] == '-':
                         score += self.gap_penalty
                     else:
-                        char1, char2 = (self.prof_a[i][a_i].upper(), self.prof_b[j][b_i].upper()) if (
-                            self.prof_a[i][a_i].upper(), self.prof_b[j][b_i].upper()) in self.sub_mat else \
-                            (self.prof_b[j][b_i].upper(),
-                             self.prof_a[i][a_i].upper())
+                        char1, char2 = (self.prof_a[i][a_i].upper(), self.prof_b[j][b_i].upper()) \
+                            if (self.prof_a[i][a_i].upper(), self.prof_b[j][b_i].upper()) \
+                            in self.sub_mat \
+                            else (self.prof_b[j][b_i].upper(), self.prof_a[i][a_i].upper())
                         score += self.sub_mat[(char1, char2)]
 
         return score
