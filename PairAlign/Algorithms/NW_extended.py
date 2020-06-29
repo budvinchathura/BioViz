@@ -13,6 +13,10 @@ class NWExtended(Algorithm):
     DIAGONAL = 2
     UP = 3
 
+    M = 0
+    Ix = 1
+    Iy = 2
+
     def __init__(self, seq_type, sub_mat, seq_a, seq_b, match_score=1,
                  mismatch_penalty=-1, opening_gap_penalty=-1,
                  extending_gap_penalty=-1, priority='HIGHROAD'):
@@ -47,12 +51,12 @@ class NWExtended(Algorithm):
         for i in range(self.len_a+1):
             self.score_mat[i][0][0] = self.opening_gap_penalty + \
                 self.extending_gap_penalty*(i-1)
-            self.direction_mat[i][0] = [[(0, self.UP)], [], []]
+            self.direction_mat[i][0] = [[(self.M, self.UP)], [], []]
 
         for j in range(self.len_b+1):
             self.score_mat[0][j][0] = self.opening_gap_penalty + \
                 self.extending_gap_penalty*(j-1)
-            self.direction_mat[0][j] = [[(0, self.LEFT)], [], []]
+            self.direction_mat[0][j] = [[(self.M, self.LEFT)], [], []]
 
         self.score_mat[0][0][0] = 0
         self.direction_mat[0][0] = [[0], [0], [0]]
@@ -80,16 +84,12 @@ class NWExtended(Algorithm):
         for i in range(1, self.len_a + 1):
             for j in range(1, self.len_b + 1):
 
-                open_gap_1 = self.score_mat[i -
-                                            1][j][0] + self.opening_gap_penalty
-                extend_gap_1 = - \
-                    np.inf if self.score_mat[i-1][j][1] == '-inf' else \
+                open_gap_1 = self.score_mat[i -1][j][0] + self.opening_gap_penalty
+                extend_gap_1 = -np.inf if self.score_mat[i-1][j][1] == '-inf' else \
                     self.score_mat[i-1][j][1] + self.extending_gap_penalty
 
-                open_gap_2 = self.score_mat[i][j -
-                                               1][0] + self.opening_gap_penalty
-                extend_gap_2 = - \
-                    np.inf if self.score_mat[i][j-1][2] == '-inf' else \
+                open_gap_2 = self.score_mat[i][j -1][0] + self.opening_gap_penalty
+                extend_gap_2 = -np.inf if self.score_mat[i][j-1][2] == '-inf' else \
                     self.score_mat[i][j-1][2] + self.extending_gap_penalty
 
                 max_2 = max(open_gap_1, extend_gap_1)
@@ -109,23 +109,23 @@ class NWExtended(Algorithm):
                 self.direction_mat[i][j] = [[], [], []]
 
                 if max_value[0] == match:
-                    self.direction_mat[i][j][0].append((0, self.DIAGONAL))
+                    self.direction_mat[i][j][0].append((self.M, self.DIAGONAL))
                 if max_value[0] == open_gap_1:
-                    self.direction_mat[i][j][0].append((0, self.UP))
+                    self.direction_mat[i][j][0].append((self.M, self.UP))
                 if max_value[0] == extend_gap_1:
-                    self.direction_mat[i][j][0].append((1, self.UP))
+                    self.direction_mat[i][j][0].append((self.Ix, self.UP))
                 if max_value[0] == open_gap_2:
-                    self.direction_mat[i][j][0].append((0, self.LEFT))
+                    self.direction_mat[i][j][0].append((self.M, self.LEFT))
                 if max_value[0] == extend_gap_2:
-                    self.direction_mat[i][j][0].append((2, self.LEFT))
+                    self.direction_mat[i][j][0].append((self.Iy, self.LEFT))
                 if max_value[1] == open_gap_1:
-                    self.direction_mat[i][j][1].append((0, self.UP))
+                    self.direction_mat[i][j][1].append((self.M, self.UP))
                 if max_value[1] == extend_gap_1:
-                    self.direction_mat[i][j][1].append((1, self.UP))
+                    self.direction_mat[i][j][1].append((self.Ix, self.UP))
                 if max_value[2] == open_gap_2:
-                    self.direction_mat[i][j][2].append((0, self.LEFT))
+                    self.direction_mat[i][j][2].append((self.M, self.LEFT))
                 if max_value[2] == extend_gap_2:
-                    self.direction_mat[i][j][2].append((2, self.LEFT))
+                    self.direction_mat[i][j][2].append((self.Iy, self.LEFT))
 
         self.score = max(self.score_mat[self.len_a][self.len_b])
 
@@ -185,7 +185,6 @@ class NWExtended(Algorithm):
         elif self.priority == 'LOWROAD':
             while True:
                 self.traceback_path.append([i, j, k])
-                # print([i, j, k])
 
                 if(j >= 0 and (2, self.LEFT) in self.direction_mat[i][j][k]):
                     self.algn_a = '-'+self.algn_a

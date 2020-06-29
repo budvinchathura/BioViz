@@ -66,6 +66,12 @@
             "description": "OK",
             "schema": {
               "$ref": "#/components/schemas/PairAlignResult"
+            },
+            "400": {
+              "description": "BAD REQUEST",
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
             }
           }
         }
@@ -78,7 +84,7 @@
           ],
           "summary": "Returns alignment, score matrix and direction matrix",
           "requestBody": {
-            "description": "Sequence data",
+            "description": "Sequence data. Use only DNA/Protein sequences",
             "required": true,
             "content": {
               "application/json": {
@@ -101,6 +107,12 @@
               "schema": {
                 "$ref": "#/components/schemas/PairAlignResult"
               }
+            },
+            "400": {
+              "description": "BAD REQUEST",
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
             }
           }
         }
@@ -112,7 +124,7 @@
         ],
         "summary": "Returns alignment, score matrix and direction matrix",
         "requestBody": {
-            "description": "Sequence data",
+            "description": "Sequence data. Use only DNA/Protein sequences",
             "required": true,
             "content": {
                 "application/json": {
@@ -135,6 +147,12 @@
                 "schema": {
                 "$ref": "#/components/schemas/PairAlignResult"
                 }
+            },
+            "400": {
+              "description": "BAD REQUEST",
+              "schema": {
+                "$ref": "#/components/schemas/Error"
+              }
             }
         }
     }
@@ -146,7 +164,7 @@
         ],
         "summary": "Returns alignments, score matrix and direction matrix",
         "requestBody": {
-          "description": "Sequence data. Use only DNA sequences",
+          "description": "Sequence data. Use only DNA/Protein sequences",
           "required": true,
           "content": {
             "application/json": {
@@ -165,6 +183,12 @@
             "schema": {
               "$ref": "#/components/schemas/PairAlignResult"
             }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
           }
         }
       }
@@ -176,7 +200,7 @@
         ],
         "summary": "Returns final alignment, identity and phylogenetic tree",
         "requestBody": {
-          "description": "Sequence data. Use only DNA sequences",
+          "description": "Sequence data. Use only DNA/Protein sequences",
           "required": true,
           "content": {
             "application/json": {
@@ -198,6 +222,12 @@
             "schema": {
               "$ref": "#/components/schemas/MSAResult"
             }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
           }
         }
       }
@@ -209,7 +239,7 @@
         ],
         "summary": "Returns final alignment, identity and phylogenetic tree",
         "requestBody": {
-          "description": "Sequence data. Use only DNA sequences",
+          "description": "Sequence data. Use only DNA/Protein sequences",
           "required": true,
           "content": {
             "application/json": {
@@ -231,6 +261,12 @@
             "schema": {
               "$ref": "#/components/schemas/MSAResult"
             }
+          },
+          "400": {
+            "description": "BAD REQUEST",
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
           }
         }
       }
@@ -238,6 +274,18 @@
   },
   "components": {
     "schemas": {
+    "Error":{
+      "type":"object",
+      "properties":{
+        "errors":{
+          "type":"array",
+          "name":"List of errors",
+          "items":{
+            "type":"string"
+          }
+        }
+      }
+    },
       "PairAlignRequestPostBody": {
         "type": "object",
         "properties": {
@@ -252,15 +300,15 @@
           },
           "match":{
             "type":"integer",
-            "name":"Match score (positive integer)"
+            "name":"Match score"
           },
           "mismatch":{
             "type":"integer",
-            "name":"Mismatch penalty (negative integer)"
+            "name":"Mismatch penalty"
           },
           "gap":{
             "type":"integer",
-            "name":"Gap penalty (negative integer)"
+            "name":"Gap penalty"
           }
         }
       },
@@ -328,19 +376,19 @@
           },
           "match":{
             "type":"integer",
-            "name":"Match score (positive integer)"
+            "name":"Match score"
           },
           "mismatch":{
             "type":"integer",
-            "name":"Mismatch penalty (negative integer)"
+            "name":"Mismatch penalty"
           },
           "opening_gap":{
             "type":"integer",
-            "name":"Open penalty (negative integer)"
+            "name":"Open penalty"
           },
           "extending_gap":{
             "type":"integer",
-            "name":"Extend penalty (negative integer)"
+            "name":"Extend penalty"
           },
           "priority":{
               "type":"string",
@@ -403,19 +451,19 @@
           },
           "match":{
             "type":"integer",
-            "name":"Match score (positive integer)"
+            "name":"Match score"
           },
           "mismatch":{
             "type":"integer",
-            "name":"Mismatch penalty (negative integer)"
+            "name":"Mismatch penalty"
           },
           "opening_gap":{
             "type":"integer",
-            "name":"Open penalty (negative integer)"
+            "name":"Open penalty"
           },
           "extending_gap":{
             "type":"integer",
-            "name":"Extend penalty (negative integer)"
+            "name":"Extend penalty"
           },
           "priority":{
               "type":"string",
@@ -458,15 +506,15 @@
           },
           "match":{
             "type":"integer",
-            "name":"Match score (positive integer)"
+            "name":"Match score"
           },
           "mismatch":{
             "type":"integer",
-            "name":"Mismatch penalty (negative integer)"
+            "name":"Mismatch penalty"
           },
           "gap":{
             "type":"integer",
-            "name":"Gap penalty (negative integer)"
+            "name":"Gap penalty"
           },
           "seq_type":{
             "type":"string",
@@ -534,15 +582,15 @@
           },
           "match":{
             "type":"integer",
-            "name":"Match score (positive integer)"
+            "name":"Match score"
           },
           "mismatch":{
             "type":"integer",
-            "name":"Mismatch penalty (negative integer)"
+            "name":"Mismatch penalty"
           },
           "gap":{
             "type":"integer",
-            "name":"Gap penalty (negative integer)"
+            "name":"Gap penalty"
           },
           "seq_type":{
             "type":"string",
@@ -568,15 +616,15 @@
           },
           "match":{
             "type":"integer",
-            "name":"Match score (positive integer)"
+            "name":"Match score"
           },
           "mismatch":{
             "type":"integer",
-            "name":"Mismatch penalty (negative integer)"
+            "name":"Mismatch penalty"
           },
           "gap":{
             "type":"integer",
-            "name":"Gap penalty (negative integer)"
+            "name":"Gap penalty"
           },
           "seq_type":{
             "type":"string",
@@ -632,15 +680,15 @@
           },
           "match":{
             "type":"integer",
-            "name":"Match score (positive integer)"
+            "name":"Match score"
           },
           "mismatch":{
             "type":"integer",
-            "name":"Mismatch penalty (negative integer)"
+            "name":"Mismatch penalty"
           },
           "gap":{
             "type":"integer",
-            "name":"Gap penalty (negative integer)"
+            "name":"Gap penalty"
           },
           "seq_type":{
             "type":"string",

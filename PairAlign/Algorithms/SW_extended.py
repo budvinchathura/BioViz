@@ -13,6 +13,10 @@ class SWExtended(Algorithm):
     DIAGONAL = 2
     UP = 3
 
+    M = 0
+    Ix = 1
+    Iy = 2
+
     def __init__(self, seq_type, sub_mat, seq_a, seq_b,
                  match_score=1, mismatch_penalty=-1, opening_gap_penalty=-1,
                  extending_gap_penalty=-1, priority='HIGHROAD'):
@@ -109,23 +113,23 @@ class SWExtended(Algorithm):
                 self.direction_mat[i][j] = [[], [], []]
 
                 if max_value[0] == match:
-                    self.direction_mat[i][j][0].append((0, self.DIAGONAL))
+                    self.direction_mat[i][j][0].append((self.M, self.DIAGONAL))
                 if max_value[0] == open_gap_1:
-                    self.direction_mat[i][j][0].append((0, self.UP))
+                    self.direction_mat[i][j][0].append((self.M, self.UP))
                 if max_value[0] == extend_gap_1:
-                    self.direction_mat[i][j][0].append((1, self.UP))
+                    self.direction_mat[i][j][0].append((self.Ix, self.UP))
                 if max_value[0] == open_gap_2:
-                    self.direction_mat[i][j][0].append((0, self.LEFT))
+                    self.direction_mat[i][j][0].append((self.M, self.LEFT))
                 if max_value[0] == extend_gap_2:
-                    self.direction_mat[i][j][0].append((2, self.LEFT))
+                    self.direction_mat[i][j][0].append((self.Iy, self.LEFT))
                 if max_value[1] == open_gap_1:
-                    self.direction_mat[i][j][1].append((0, self.UP))
+                    self.direction_mat[i][j][1].append((self.M, self.UP))
                 if max_value[1] == extend_gap_1:
-                    self.direction_mat[i][j][1].append((1, self.UP))
+                    self.direction_mat[i][j][1].append((self.Ix, self.UP))
                 if max_value[2] == open_gap_2:
-                    self.direction_mat[i][j][2].append((0, self.LEFT))
+                    self.direction_mat[i][j][2].append((self.M, self.LEFT))
                 if max_value[2] == extend_gap_2:
-                    self.direction_mat[i][j][2].append((2, self.LEFT))
+                    self.direction_mat[i][j][2].append((self.Iy, self.LEFT))
                 if max_value[0] == 0:
                     self.direction_mat[i][j][0].append(0)
                 if max_value[0] != '-inf' and max_value[0] > self.max_score:  # check
