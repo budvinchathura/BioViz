@@ -2,6 +2,10 @@ from PairAlign.Algorithms.Algorithm import Algorithm
 
 
 class Executer():
+    """
+    Class for executing pairalign algorithms.
+    Calls each method in the specified order
+    """
     def __init__(self, algorithm: Algorithm):
         self.algorithm = algorithm
 

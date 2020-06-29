@@ -6,7 +6,7 @@ from PairAlign.Algorithms.SW import SW
 
 
 # python -m coverage run Tests/test_pairalign.py
-# python -m unittest discover -s Tests
+# python -m unittest discover -s test/BasicPairAlign
 
 DATA_FILE_NAME = 'test/BasicPairAlign/data.json'
 
